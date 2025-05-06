@@ -1,7 +1,6 @@
-Charla Binlingüe: El asyncronismo y concurrencia de Python de 2025
-(O español puro, como sea mejor)
+Charla Bilingüe: El asincronismo y la concurrencia en Python en 2025
 
-Dos presetandores:
+Presentadores:
 
 Andrew Pikul (bilingual)
 ------------------------
@@ -14,34 +13,33 @@ Highlighted work:
 - github.com/plotly/kaleido
 (not employed by plotly, collaborative work)
 
-David Hernando Aranguita Ruiz (español)
+David Angarita (español)
 ---------------------------------------
 LinkedIn: https://www.linkedin.com/in/davidangaritaruiz/
 GitHub: https://github.com/davidangarita1
 Intermediate Engineer: (JavaScript, Python)
 
-Outline/Esquema
+Esquema / Outline
 -------
 
-## Provided Materials/Recursos Adicionales
--  slides/diapositivos
--  live programming/programación en viva
--  printable cheatsheet with some physical copies/ficha de atajos, PDF y fisíca
+## Recursos adicionales / Provided Materials
+-  Diapositivas / Slides
+-  Programación en vivo / Live coding
+-  Ficha de atajos (cheatsheet) imprimible (PDF y copias físicas)
 
-### Ouline/Esquema
+### Esquema / Outline
 
--  essential packages (aiohttp, aiofile)
-   (paquetes esenciales)
--  types of coroutines/awaitables (native asyncio vs trio)
-   (tipos de corrutinas... nativos y de un paquete se llama "trio" XD)
--  archictectures beyond the web (parallel processing) (3.10, 3.11, 3.12)
-   arquitecturas más que el web (procesamiento en paralelo)
--  new types of errors and error groups, `try/await` (3.10, 3.11, 3.12)
-   tipos de errores neuvos y grupos, `try/await`
--  GIL (why threads don't matter)
-   (por qué no importan los hilos)
--  Blocking calls (why threads matter)
-   (llamadas bloquenado, por qué importan los hilos)
--  The death of the GIL, long live the GIL! (why threads are going to matter)
-   (se muere el GIL, o por qué se importarán más los hilos)
-
+-  Paquetes esenciales: aiohttp, aiofile
+   (Essential packages)
+-  Tipos de corrutinas y objetos esperables: asyncio nativo vs. trio
+   (Types of coroutines / awaitables)
+-  Arquitecturas más allá de la web: procesamiento en paralelo (Python 3.10, 3.11, 3.12)
+   (Architectures beyond the web: parallel processing)
+-  Nuevos tipos de errores y grupos de errores: `try/await` (3.10, 3.11, 3.12)
+   (New types of errors and error groups)
+-  El GIL: por qué los hilos no importan...
+   (GIL: why threads don't matter)
+-  Llamadas bloqueantes: por qué los hilos sí importan
+   (Blocking calls: why threads matter)
+-  ¡Muere el GIL, larga vida al GIL!: por qué los hilos importarán aún más
+   (The death of the GIL, long live the GIL!)
