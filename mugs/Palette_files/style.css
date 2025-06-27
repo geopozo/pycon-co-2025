@@ -1,0 +1,253 @@
+:root {
+  /* Grayscale */
+  --g1: #FFFFFF;
+  --g2: #FDFDFD;
+  --g3: #FAFAFA;
+  --g4: #F5F5F5;
+  --g5: #E6E6E6;
+  --g6: #6E6E6E;
+  --g7: #515151;
+  --g8: #343434;
+  --g9: #141414;
+
+  /* Navy de Mariela */
+  --p1: #f8fafc;
+  --p2: #f1f5f9;
+  --p3: #e2e8f0;
+  --p4: #cbd5e1;
+  --p5: #94a3b8;
+  --p6: #64748b;
+  --p7: #475569;
+  --p8: #334155;
+  --p9: #1e293b;
+  --a1: #0f172a;
+}
+
+html {
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+  color: var(--g8);
+  line-height: 1.75em;
+  letter-spacing: .015em;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.page-container {
+    background-color: white;
+    max-width: 1020px;
+    margin: 0 auto;
+}
+
+.navbar {
+  padding: 1em;
+  background-color: var(--p5);
+  color: var(--g1);
+  font-weight: 600;
+  font-size:1.2em;
+  letter-spacing:.05em;
+}
+.content {
+  margin-top: 0;
+  padding: 1em;
+}
+.code-col {
+  display: flex;
+  width:100%;
+  gap: 1rem;
+}
+
+.code-col > .col {
+  flex: 1;
+
+}
+.code-col > .col > title {
+  height:100%;
+}
+.code-col > .col > code {
+  height:100%;
+}
+code {
+  background-color: var(--g4);
+  color: var(--a1);
+  filter: grayscale(.6);
+  border-radius: .5em;
+  border-left: .2em solid var(--g4);
+  border-right: .2em solid var(--g4);
+  letter-spacing: 0;
+}
+code.block {
+  padding: 1em;
+  white-space: pre;
+  font-family: "Roboto Mono";
+  display:block;
+  /* background-color: var(--g3); */
+  color: var(--g7);
+  /* border: .125em solid var(--g3); */
+  margin-bottom: 1em;
+}
+
+code.block.with-title {
+  padding-top: 0.4em;
+  border-radius: 0 0 .5em .5em;
+  border-top:0;
+}
+.code-title {
+  padding: .2em 0 .5em .5em;
+  /*color: #ff7d00; /*HO BOY*/
+  color: var(--a1);
+  border-radius: .5em .5em 0 0;
+  background-color: var(--p1);
+  border: .125em solid var(--p1);
+  border-bottom:0px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 1.5rem 0 1em 0;
+  letter-spacing:0.07rem;
+}
+h1 {
+  color: var(--p9);
+}
+h2 {
+  color: var(--a1);
+}
+h3 {
+  color: var(--a1);
+}
+h4 {
+  color: var(--a1);
+}
+h5 {
+  color: var(--g7);
+  font-size: 1em;
+}
+h6 {
+  color: var(--g6);
+  font-size: 1em;
+}
+
+.fade {
+  filter: grayscale(1);
+  opacity: 55%;
+}
+
+a, a:visited, a:hover, a:active, a:focus, a > code {
+  color: var(--p5);
+  text-decoration: none;
+  text-decoration-color: var(--a1);
+  outline: none;
+}
+
+
+.alert {
+  border-left: 0.5em solid;
+  padding-left: .8em;
+}
+
+.note {
+  /*border-color: #b200ff;
+  color: #b200ff; */
+  border-color: #b3b3b3;
+  color: #757575;
+}
+
+.primary {
+  /*border-color: #b200ff;
+  color: #b200ff; */
+  border-color: #066BD4;
+  color: #757575;
+}
+
+.highlight {
+  /*border-color: #b200ff;
+  color: #b200ff; */
+  border-color: #8353Df;
+  color: #757575;
+}
+
+.accent {
+  /*border-color: #b200ff;
+  color: #b200ff; */
+  border-color: #9D6C06;
+  color: #757575;
+}
+
+.success {
+  /*border-color: #b200ff;
+  color: #b200ff; */
+  border-color: #36B054;
+  color: #757575;
+}
+
+.warning {
+  /*border-color: #b200ff;
+  color: #b200ff; */
+  border-color: #CE222D;
+  color: #757575;
+}
+
+.white {
+  /*border-color: #b200ff;
+  color: #b200ff; */
+  border-color: #FFFFFF;
+  color: #757575;
+}
+
+.black {
+  /*border-color: #b200ff;
+  color: #b200ff; */
+  border-color: #000000;
+  color: #757575;
+}
+
+.title {
+  font-weight:600;
+  margin-bottom: 0px;
+}
+
+.title + .alert {
+  margin-top: 0px;
+}
+
+.node {
+  margin-top: .75em;
+}
+.node > h1, .node > h2, .node > h3, .node > h4, .node > h5, .node > h6 {
+  margin-bottom: .2em;
+  margin-top: .2em
+}
+.node > p {
+  margin-top: .35em;
+}
+
+.node:not(.root) {
+  margin-left: 1em;
+}
+.toggle {
+  all: unset;
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.collapsible-body {
+  overflow: hidden;
+  max-height: 0px;
+  transition: max-height .5s ease;
+}
+
+.collapsible:not(.open) .toggle {
+  transform: rotate(-90deg);  /* or 180deg, depending on your arrow */
+}
+
+.block_with_sub {
+  display: flex;
+  gap: 1em;
+}
+.block_with_sub > .sub {
+  align-self: flex-start;
+  font-size:smaller;
+  font-weight: normal;
+}
