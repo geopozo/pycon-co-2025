@@ -1,0 +1,10 @@
+try:
+    await asyncio.gather(task1, task2)
+except* ValueError as e:
+    print("Got one or more ValueErrors:", e.exceptions)
+
+
+does that work?
+
+does it return an error?
+

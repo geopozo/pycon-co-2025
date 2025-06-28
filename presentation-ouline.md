@@ -1,0 +1,43 @@
+Start off with why need async await, lets do a pyscript example
+Start with a viztrace of a regular program and a async equivelenent.
+And show the two graphs as a description
+
+(it's not actually paralell, its still just one program)
+so it's switching back and forth, see if you can see the two things
+the semiparallelo
+the and then in one line
+
+then lets talk about things going in parallel
+is it truly paralell? it is.
+
+lets look at gather
+but what if we have an error? how do we want to handle it
+
+show the gather strategy
+- errors, cancelling
+  (what about collect errors)
+  (what about cancel tasks)
+  (do you have the results still if the error gets thrown? no?)
+
+show the task group strategy
+  - using try/except, you have to for awaits
+  - or, how do we avoid awaits (gather does that)
+  - what about error groups (does it work with lists?)
+
+so now, tasks, and coroutines are done
+
+let's talk about futures- low level
+
+lets talk about gil
+
+orphan tasks
+
+
+
+
+
+asyncio mugs
+3 types of awaitables
+error groups
+useful API (to_thread, TaskGroup, gather)
+proper order of checking to avoid an error
