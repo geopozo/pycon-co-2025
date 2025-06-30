@@ -7,6 +7,12 @@ so it's switching back and forth, see if you can see the two things
 the semiparallelo
 the and then in one line
 
+and show how even sleeps can be errored
+and why does this matter- just to show that even the most
+innocent functiosn can throw errors, and for this example maybe no
+big deal, but on bigger projects with more users, this errors from
+nowhere can lead to a lot of delays if we are not conscious of it
+
 then lets talk about things going in parallel
 is it truly paralell? it is.
 
