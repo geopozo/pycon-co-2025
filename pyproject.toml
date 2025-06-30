@@ -14,11 +14,14 @@ dynamic = ["version"]
 description = "Add your description here"
 readme = "README.md"
 authors = [
-    { name = "Andrew Pikul", email = "ajp@grupopikul.com" }
+    { name = "Andrew Pikul", email = "ajp@grupopikul.com" },
     { name = "David Angarita", email = "david.angarita@grupopikul.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pyinstrument>=5.0.2",
+    "viztracer[with-c]>=1.0.4",
+]
 
 [dependency-groups]
 dev = [
