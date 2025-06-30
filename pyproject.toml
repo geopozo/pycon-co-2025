@@ -19,8 +19,8 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "pyinstrument>=5.0.2",
-    "viztracer[with-c]>=1.0.4",
+    "orjson>=3.10.18",
+    "viztracer>=1.0.4",
 ]
 
 [dependency-groups]
@@ -51,6 +51,7 @@ ignore = [
           "SIM105", # Too opionated (try-except-pass) (readability?)
           "PT003", # scope="function" implied but I like readability
           "G004", # I like fstrings in my log
+          "T201", # Allow print
           ]
 
 [tool.ruff.lint.per-file-ignores]
