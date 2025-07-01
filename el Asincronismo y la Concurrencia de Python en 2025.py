@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.14.9"
-app = marimo.App(width="medium", html_head_file="head.html")
+app = marimo.App(width="medium")
 
 
 @app.cell
@@ -27,7 +27,7 @@ def _(mo):
     ## David:
 
     linkedin
-    Coautor de github-helper y geopozo 
+    Coautor de github-helper y geopozo
 
     ## Andrew
 
@@ -213,7 +213,7 @@ def _(mo):
       -  Intenta dos veces
       -  Leventar Error Nuevo
     - Grupos de errores
-    - Cancelación automatica (context sin context)  
+    - Cancelación automatica (context sin context)
 
     Quieres seguir? O quieres parar. Qué hacemos. Y qué hacemos cuando nos
     cancelamos.
