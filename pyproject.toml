@@ -11,7 +11,7 @@ enabled = true
 [project]
 name = "pycon-co-2025-geopozo"
 dynamic = ["version"]
-description = "Add your description here"
+description = "Talk for pycon-co-2025"
 readme = "README.md"
 authors = [
     { name = "Andrew Pikul", email = "ajp@grupopikul.com" },
@@ -19,7 +19,9 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "orjson>=3.10.18",
+    "graphviz>=0.21",
+    "marimo>=0.14.9",
+    "nbformat>=5.10.4",
     "viztracer>=1.0.4",
 ]
 
@@ -72,3 +74,7 @@ help = "Run test by test, slowly, quitting after first error"
 [tool.poe.tasks.filter-test]
 cmd = "pytest -W error -vvvx -rA"
 help = "Run any/all tests one by one with basic settings: can include filename and -k filters"
+
+[tool.marimo.runtime]
+
+
