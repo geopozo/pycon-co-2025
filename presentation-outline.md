@@ -47,3 +47,23 @@ asyncio mugs
 error groups
 useful API (to_thread, TaskGroup, gather)
 proper order of checking to avoid an error
+
+- we have hand draw flamegraphs
+- we can export generated ones
+- we can execute python
+- we still need to tell how it looks with threading
+- maybe networks
+from pyvis.network import Network
+import networkx as nx
+
+G = nx.gn_graph(10)
+
+net = Network(notebook=False, directed=True)
+net.from_nx(G)
+net.show("network.html")
+
+    (async () => {{
+      const viz = new Viz();
+      const svg = await viz.renderSVGElement(`{dot}`);
+      document.getElementById('dag').appendChild(svg);
+    }})();
