@@ -25,6 +25,6 @@ output_dir = Path("results")
 output_dir.mkdir(parents=True, exist_ok=True)
 
 with viztracer.VizTracer(
-    output_file=str(output_dir/"sync_profile.json"),
+    output_file=str(output_dir/"sync_profile.html"),
 ) as tracer:
     foo()

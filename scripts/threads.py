@@ -7,6 +7,7 @@
 import sys
 import time
 from pathlib import Path
+from threading import Thread
 
 import viztracer
 
@@ -32,6 +33,6 @@ output_dir = Path("results")
 output_dir.mkdir(parents=True, exist_ok=True)
 
 with viztracer.VizTracer(
-    output_file=str(output_dir/"viztracer_profile.json"),
+    output_file=str(output_dir/"thread_profile.json"),
 ) as tracer:
     foo()

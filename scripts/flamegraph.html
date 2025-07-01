@@ -2,25 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>D3-Flame-Graph v4 + D3 v7 Example</title>
+  <title>D3 Flamegraph with Custom Axis</title>
 
   <!-- D3 v7 -->
   <script src="https://unpkg.com/d3@7"></script>
 
-  <!-- d3-flame-graph v4.x (no d3-tip needed) -->
+  <!-- d3-flame-graph v4.x -->
   <link
     rel="stylesheet"
-    href="https://unpkg.com/d3-flame-graph@4.1.3/dist/d3-flamegraph.css"
-  />
+    href="https://unpkg.com/d3-flame-graph@4.1.3/dist/d3-flamegraph.css"/>
   <script src="https://unpkg.com/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
 
   <style>
-    body { font-family: sans-serif; margin: 1em; }
-    #chart { width: 100%; height: 400px; }
+    body {
+      font-family: sans-serif;
+      margin: 1em;
+    }
+    /* Container for our custom axis */
+    #axis-container {
+      width: 100%;
+      height: 40px;
+      margin-bottom: 0.5em;
+    }
+    /* The flamegraph is pushed down by 1em relative to the axis */
+    #chart {
+      width: 100%;
+      height: 600px;
+      margin-top: 1em;
+    }
+    /* Style for axis labels */
+    #axis-container text {
+      font-size: 32px;
+      fill: #000;
+    }
+    .d3-flame-graph-label {
+      font-size: 32px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <h1>D3-Flame-Graph v4 + D3 v7</h1>
+
+  <!-- Custom axis above the flamegraph -->
+  <div id="axis-container">
+    <svg width="100%" height="100%">
+      <defs>
+        <marker id="arrowhead" viewBox="0 0 10 10" refX="10" refY="5"
+                markerUnits="strokeWidth" markerWidth="6"
+                markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#000"></path>
+        </marker>
+      </defs>
+
+      <!-- Arrowed line -->
+      <line x1="0" y1="30" x2="99%" y2="30"
+            stroke="#000" stroke-width="4"
+            marker-end="url(#arrowhead)"></line>
+
+      <!-- Labels -->
+      <text x="0" y="25" text-anchor="start">Inicio</text>
+      <text x="50%"         y="25" text-anchor="middle">Ejecución</text>
+      <text x="95%"        y="25" text-anchor="end">Fin</text>
+    </svg>
+  </div>
+
+  <!-- The flamegraph itself -->
   <div id="chart"></div>
 
   <script>
@@ -33,27 +79,29 @@
           name: "foo",
           value: 60,
           children: [
-            { name: "foo.bar", value: 30 },
-            { name: "foo.baz", value: 30 }
+            { name: "bar", value: 30 },
+            { name: "baz", value: 30 }
           ]
         },
-        { name: "qux", value: 40 }
+        { name: "bar", value: 40 }
       ]
     };
 
-    // Create the flamegraph (global function provided by v4+)
+    // Build the flamegraph
     const flameGraph = flamegraph()
       .width(document.getElementById("chart").clientWidth)
-      .cellHeight(18)
+      .cellHeight(46)
       .transitionDuration(500)
       .minFrameSize(2)
       .tooltip(true)
-      .title("Sample Flamegraph");
+      .title("")       // no built-in title bar
+      .inverted(true); // if you want inverted orientation
 
-    // Render into our div
+    // Render it
     d3.select("#chart")
       .datum(data)
       .call(flameGraph);
   </script>
+
 </body>
 </html>
