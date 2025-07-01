@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>D3-Flame-Graph v4 + D3 v7 Example</title>
+
+  <!-- D3 v7 -->
+  <script src="https://unpkg.com/d3@7"></script>
+
+  <!-- d3-flame-graph v4.x (no d3-tip needed) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/d3-flame-graph@4.1.3/dist/d3-flamegraph.css"
+  />
+  <script src="https://unpkg.com/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
+
+  <style>
+    body { font-family: sans-serif; margin: 1em; }
+    #chart { width: 100%; height: 400px; }
+  </style>
+</head>
+<body>
+  <h1>D3-Flame-Graph v4 + D3 v7</h1>
+  <div id="chart"></div>
+
+  <script>
+    // Inline example data
+    const data = {
+      name: "root",
+      value: 100,
+      children: [
+        {
+          name: "foo",
+          value: 60,
+          children: [
+            { name: "foo.bar", value: 30 },
+            { name: "foo.baz", value: 30 }
+          ]
+        },
+        { name: "qux", value: 40 }
+      ]
+    };
+
+    // Create the flamegraph (global function provided by v4+)
+    const flameGraph = flamegraph()
+      .width(document.getElementById("chart").clientWidth)
+      .cellHeight(18)
+      .transitionDuration(500)
+      .minFrameSize(2)
+      .tooltip(true)
+      .title("Sample Flamegraph");
+
+    // Render into our div
+    d3.select("#chart")
+      .datum(data)
+      .call(flameGraph);
+  </script>
+</body>
+</html>
