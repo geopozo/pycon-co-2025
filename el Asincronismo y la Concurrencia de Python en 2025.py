@@ -628,9 +628,7 @@ def _(mo):
     </svg>""")
     return
 
-@app.cell
-def _(mo):
-    mo.md(r"""
+r"""
 import asyncio
 import contextlib
 from collections.abc import AsyncIterable
@@ -700,7 +698,7 @@ if __name__ == "__main__":
             print("inside async with got:", res)
 
     asyncio.run(demo())
-          """)
+          """
 
 
 if __name__ == "__main__":
