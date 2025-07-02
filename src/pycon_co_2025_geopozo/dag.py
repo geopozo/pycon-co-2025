@@ -94,7 +94,7 @@ def from_function_tree(tree: Node) -> str:
             "You must install graphviz to use this function. "
             "https://graphviz.org/download/"
         ) from e
-    class_name = uuid.uuid4().hex[:4]
+    class_name = "a" + str(uuid.uuid4().hex[:4])
     return f"""
     <style>
       /* Set default text + line color via currentColor */
