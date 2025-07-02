@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 
 BranchValuesOptions = Literal["total", "remainder"]
 
-def viztracer_to_icicle(tree, branchvalues="total"):
+def from_viztrace(tree, branchvalues="total"):
     """
     Convert a VizTracer-JSON to a Plotly Icicle figure.
 
