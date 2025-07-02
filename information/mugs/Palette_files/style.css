@@ -76,6 +76,13 @@ code {
   border-right: .2em solid var(--g4);
   letter-spacing: 0;
 }
+div.block {
+  margin-top: 10px;
+  background-color: #23241f;
+	border-radius: .5em;
+	border-left: .2em solid var(--g4);
+	border-right: .2em solid var(--g4);
+}
 code.block {
   padding: 1em;
   white-space: pre;

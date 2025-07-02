@@ -52,7 +52,10 @@
   </head>
   <body style="padding: 1cm; height: 100%; width: 100%">
     <div class="page-container" style="width: 20cm; height: 8cm; box-sizing: content-box;">
-      <div class="content">
+      <div class="content" style="position:relative">
+        <img src="img/bunny_pointing.png" style="position: absolute; left:
+                  467px; top: 230px;
+        height: auto; width: 50px;"/>
         <div class="col">
           <h3>Corutinas</h3>
           <pre><code class="block language-python">async def hola():
@@ -60,15 +63,16 @@
 
 foo() # devuelve una corutina
 await foo() # devuelve "Hola"</code></pre>
-          ⚠️no se puede esperar más de una vez⚠️<br>
-          ⚠️si no se espera, no se empieza⚠️
+          <span>⚠️no puede esperar más de una vez⚠️</span><br>
+          <span>⚠️si no se espera, no comienza⚠️</span>
           <h3 style="margin-top: 8px;">Futuros</h3>
           <pre><code class="block language-python">f = asyncio
   .get_running_loop()
   .create_future()
 f.set_result(...) # set_exception()</code></pre>
-          🪦de bajo nivel!🪦<br>
-          🎨todo a mano!🎨
+          <span>🪦de bajo nivel!🪦</span><br>
+          <span>🎨todo a mano!🎨</span><br>
+          <span>💥puede esperar más de una vez💥</span>
         </div>
         <div class="col">
           <h3>Tareas</h3>
@@ -79,8 +83,14 @@ t.done() # booleano
 t.cancelled() # booleano
 t.exception() # None | Exception
 t.result() # el resultado</code></pre>
-          <span>💥empieza a ejecutarse de una, no se espera💥<br>
-          <span>💥se puede esperar &gt; 1 vez💥
+          <span>💥empieza a ejecutarse de una, no espera💥<br></span>
+          <span>💥puede esperar más de una vez💥</span>
+          <div class="block" style="margin-top: 8px">
+            <img src="img/Logo_pycon_2025.png" style="margin-top: 10px; width:
+            auto; height: 50px; margin-left: 15px"/>
+          </div>
+          <img src="img/logo.png" style="width: auto; height: 65px; margin-left:
+          -15px" />
         </div>
         <div class="col">
           <h3>Gather</h3>
@@ -93,11 +103,13 @@ t.result() # el resultado</code></pre>
           <h3 style="margin-top: 8px">TaskGroup</h3>
           <pre><code class="block language-python">with asyncio.TaskGroup() as tg:
   tg.create_task(...)</code></pre>
-          🐍python 3.11🐍<br>
-          🧹se cancela toda tarea del grupo si hay error🧹
-        <div style="margin-top: 55px;box-sizing: border-box;margin-left: 10px">
-          ⚠️ Evite lavavajillas!
-        </div>
+          <span>🐍python 3.11🐍<br></span>
+          <span>🧹se cancela toda tarea del grupo si hay un error🧹</span>
+          <div style="margin-top: 27px;box-sizing: border-box;margin-left: 10px;
+            font-weight: bold; color: black">
+            Este pocillo es código-abierto!<br>
+            github.com/geopozo/pycon-co-2025
+          </div>
         </div>
 
       </div>
