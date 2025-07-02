@@ -46,7 +46,7 @@ def _(mo):
 
 
 @app.cell
-def _(mo, time, viztracer):
+def _(time, viztracer):
     # DEFINICIÓN
 
     def siesta():
@@ -77,7 +77,6 @@ def _(mo, time, viztracer):
             output_file=( _path := "results/sync_profile.json"),
             verbose=0
         ),
-        mo.capture_stdout()
     ):
         gato()
         yo()
@@ -87,7 +86,7 @@ def _(mo, time, viztracer):
 
 
 @app.cell
-async def _(asyncio, mo, time, viztracer):
+async def _(asyncio, time, viztracer):
     # DEFINICIÓN
 
     async def siesta_async():
@@ -118,7 +117,6 @@ async def _(asyncio, mo, time, viztracer):
             output_file=( _path := "results/async_profile.json"),
             verbose=0
         ),
-        mo.capture_stdout()
     ):
         await gato_async()
         await yo_async()
@@ -627,78 +625,6 @@ def _(mo):
         <line class="release-cycle-today-line" x1="462.98762376237624" x2="462.98762376237624" y1="0" y2="351.0" font-size="18" style="stroke:rgb(61, 148, 255); stroke-width:1.6px; "/>
     </svg>""")
     return
-
-r"""
-import asyncio
-import contextlib
-from collections.abc import AsyncIterable
-
-# ─── Async-For Wrapper ─────────────────────────────────────────────────────────
-
-def async_wrap(iterable, delay: float = None):
-    '''
-    Wrap a synchronous iterable so you can:
-        async for item in async_wrap(my_list):
-            ...
-    If delay is provided, it will await asyncio.sleep(delay) between items.
-    '''
-    async def _gen():
-        for item in iterable:
-            if delay is not None:
-                await asyncio.sleep(delay)
-            yield item
-    return _gen()
-
-def ensure_async_iterable(obj):
-    '''
-    If obj already supports __aiter__, return it;
-    otherwise wrap it with async_wrap().
-    '''
-    return obj if isinstance(obj, AsyncIterable) else async_wrap(obj)
-
-# ─── Async-With Wrapper ────────────────────────────────────────────────────────
-
-@contextlib.asynccontextmanager
-async def async_wrap_cm(cm):
-    '''
-    Wrap a synchronous context manager so you can:
-        async with async_wrap_cm(sync_cm()):
-            ...
-    Note: this does *not* make blocking I/O non-blocking,
-    it only gives you the correct __aenter__/__aexit__ protocol.
-    '''
-    with cm as entered:
-        yield entered
-
-# ─── Usage Examples ────────────────────────────────────────────────────────────
-
-if __name__ == "__main__":
-    import aiofiles  # just for demonstration, not used here
-    import asyncio
-
-    async def demo():
-        # Async-for over a regular list
-        async for x in async_wrap([1, 2, 3], delay=0.1):
-            print("got:", x)
-
-        # You can also ensure any iterable becomes async:
-        some_iter = (i*i for i in range(3))
-        async for sq in ensure_async_iterable(some_iter):
-            print("sq:", sq)
-
-        # Async-with over a sync CM
-        class SyncCM:
-            def __enter__(self):
-                print("enter sync")
-                return "resource"
-            def __exit__(self, *_):
-                print("exit sync")
-
-        async with async_wrap_cm(SyncCM()) as res:
-            print("inside async with got:", res)
-
-    asyncio.run(demo())
-          """
 
 
 if __name__ == "__main__":
