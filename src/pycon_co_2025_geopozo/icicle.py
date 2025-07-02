@@ -1,39 +1,80 @@
 """Helps convert viztracer jsons to a flamegraph."""
+import json
+import math
+from pathlib import Path
 from typing import Literal
 
+import jq  # pip install jq
 import plotly.graph_objects as go
 
 BranchValuesOptions = Literal["total", "remainder"]
 
-def from_viztrace(tree, branchvalues="total"):
+def sort_and_strip_json(path: Path | str):
+    with Path(path).open() as f:
+        data = json.load(f)
+
+    jq_filter = """
+      .traceEvents | [.[]
+       | select(.ph == "X" and .cat == "FEE")
+       | {tid, ts, dur, name}]
+      | sort_by(.tid)
+      | group_by(.tid)
+      | map({ (.[0].tid | tostring): (sort_by(.ts)) })
+      | add
     """
-    Convert a VizTracer-JSON to a Plotly Icicle figure.
 
-    Args:
-        tree (dict): Root node of the viztracer json
-        branchvalues (str): Change branchvalue setting in go.Icicle
+    return jq.compile(jq_filter).input(data).first()
 
-    Returns:
-        fig (plotly.graph_objects.Figure): Icicle figure.
-
+def from_threads(thread_events_dict):
+    """
+    Given a dict mapping thread IDs to a SORTED list of events
+    (each event a dict with keys 'ts', 'dur', 'name', 'tid']),
+    produce Plotly Icicle-format flat lists: labels, parents, values.
     """
     labels = []
     parents = []
     values = []
 
-    def _traverse(node, parent_name):
-        labels.append(node["name"])
-        parents.append(parent_name)
-        values.append(node["value"])
-        for child in node.get("children", []):
-            _traverse(child, node["name"])
+    # Iterate each thread
+    counter = {}
+    for tid, events in thread_events_dict.items():
+        # Thread root
+        thread_label = f"Thread {tid}"
+        labels.append(thread_label)
+        parents.append("")       # no parent
+        values.append(0)         # will accumulate top-level durations
 
-    # Initialize recursion (root's parent should be "")
-    _traverse(tree, "")
+        root_idx = len(labels) - 1
+        stack = []  # holds (end_ts, label)
 
-    return go.Figure(go.Icicle(
-        labels=labels,
-        parents=parents,
-        values=values,
-        branchvalues=branchvalues
-    ))
+        # Events list assumed sorted by 'ts'
+        for ev in events:
+            start = ev["ts"]
+            dur   = ev["dur"]
+            name  = ev["name"]
+            end   = start + dur
+
+            # Pop completed spans
+            while stack and start >= stack[-1][0]:
+                stack.pop()
+
+            # Parent is top of stack or thread root
+            parent_label = stack[-1][1] if stack else thread_label
+
+            # Ensure each label is unique: incorporate tid and serial index
+            i = counter.setdefault(name, 0)
+            counter[name] += 1
+
+            node_label = f"{name.split(" ")[0]}#{i!s}"
+
+            labels.append(node_label)
+            parents.append(parent_label)
+            values.append(math.log10(dur) if dur > 0 else 0)
+            # Track this span
+            stack.append((end, node_label))
+
+            # If it's not nested, accumulate at thread root
+            if len(stack) == 1:
+                values[root_idx] += dur
+
+    return labels, parents, values
