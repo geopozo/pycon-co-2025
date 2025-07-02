@@ -1,6 +1,5 @@
 """Helps convert viztracer jsons to a flamegraph."""
 import json
-import math
 from pathlib import Path
 from typing import Literal
 
@@ -69,7 +68,8 @@ def from_threads(thread_events_dict):
 
             labels.append(node_label)
             parents.append(parent_label)
-            values.append(math.log10(dur) if dur > 0 else 0)
+            values.append(dur)
+
             # Track this span
             stack.append((end, node_label))
 
