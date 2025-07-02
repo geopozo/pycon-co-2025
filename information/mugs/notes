@@ -1,6 +1,4 @@
-        <div style="float: right; margin-top: 5px;box-sizing: border-box;margin-left: 10px">
-          <p class="alert warning title" style="margin-top: 0; font-size: 12px">⚠️ Evite lavavillas!</p>
-        </div>
+
         <div style="float: right; margin-top: 5px;box-sizing: border-box;">
           <p class="alert important title" style="margin-top: 0; border-color: purple; font-size: 12px">
             👾 github.com/geopozo/pycon-co-2025
