@@ -1,4 +1,0 @@
-- [ ] set PYTHONUNBUFFERED=1
-- [ ] Show github helper
-- [ ] Más y más con todo la presentación
-- [ ] Fix the visualiar, and check it for threads
