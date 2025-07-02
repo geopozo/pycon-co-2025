@@ -70,9 +70,7 @@ body {
   height:100%;
 }
 code {
-  background-color: var(--g4);
-  color: var(--a1);
-  filter: grayscale(.6);
+  color: white;
   border-radius: .5em;
   border-left: .2em solid var(--g4);
   border-right: .2em solid var(--g4);
@@ -84,7 +82,7 @@ code.block {
   font-family: "Roboto Mono";
   display:block;
   /* background-color: var(--g3); */
-  color: var(--g7);
+  color: white;
   /* border: .125em solid var(--g3); */
   margin-bottom: 1em;
 }

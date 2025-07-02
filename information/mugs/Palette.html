@@ -4,6 +4,9 @@
     <link href="Palette_files/style.css" rel="stylesheet">
     <link href="Palette_files/palette_style.css" rel="stylesheet">
     <link href="Palette_files/css2.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai-sublime.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
     <title>Palette</title>
     <style>
       body {
@@ -14,65 +17,92 @@
         background-repeat: repeat;
         background-size: 10px 10px;
       }
+      .content {
+        width: 100%;
+        height: 100%;
+        box-sizing: content-box;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        font-size: 10px;
+        line-height: 14px;
+      }
+      .col {
+        flex: 1;
+        text-align: center;
+        color: #444;
+      }
+      .col code {
+        text-align: left;
+        margin-bottom: 2px;
+        margin-top: 2px;
+      }
+      pre {
+        margin: 0px;
+      }
+      h3 {
+        color: black;
+        text-align: center;
+        letter-spacing: 1em;
+        text-transform: uppercase;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
     </style>
   </head>
-  <body style="padding: 1cm;">
-    <div class="page-container" style="width: 20cm;height: 8cm;box-sizing: border-box;">
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-    
-    
-    
+  <body style="padding: 1cm; height: 100%; width: 100%">
+    <div class="page-container" style="width: 20cm; height: 8cm; box-sizing: content-box;">
+      <div class="content">
+        <div class="col">
+          <h3>Corutinas</h3>
+          <pre><code class="block language-python">async def hola():
+  return "Hola"
 
-    
+foo() # devuelve una corutina
+await foo() # devuelve "Hola"</code></pre>
+          ⚠️no se puede esperar más de una vez⚠️<br>
+          ⚠️si no se espera, no se empieza⚠️
+          <h3 style="margin-top: 8px;">Futuros</h3>
+          <pre><code class="block language-python">f = asyncio
+  .get_running_loop()
+  .create_future()
+f.set_result(...) # set_exception()</code></pre>
+          🪦de bajo nivel!🪦<br>
+          🎨todo a mano!🎨
+        </div>
+        <div class="col">
+          <h3>Tareas</h3>
+          <pre><code class="block language-python"># el argumento es una corutina
+t = await asyncio.create_task(foo())
+t.add_done_callback(fn_normal)
+t.done() # booleano
+t.cancelled() # booleano
+t.exception() # None | Exception
+t.result() # el resultado</code></pre>
+          <span>💥empieza a ejecutarse de una, no se espera💥<br>
+          <span>💥se puede esperar &gt; 1 vez💥
+        </div>
+        <div class="col">
+          <h3>Gather</h3>
+          <pre><code class="block language-python">await asyncio.gather( # devuelve una lista
+  tarea1,
+  tarea2,
+  ...,
+  return_exceptions=True,
+)</code></pre>
+          <h3 style="margin-top: 8px">TaskGroup</h3>
+          <pre><code class="block language-python">with asyncio.TaskGroup() as tg:
+  tg.create_task(...)</code></pre>
+          🐍python 3.11🐍<br>
+          🧹se cancela toda tarea del grupo si hay error🧹
+        <div style="margin-top: 55px;box-sizing: border-box;margin-left: 10px">
+          ⚠️ Evite lavavajillas!
+        </div>
+        </div>
 
-    
-    
-      
-
-
-
-  
-  
-  
-
-<div class="content" style="width: 100%;height: 100%;box-sizing: border-box;">
-          
-          
-          
-          
-          
-          
-          
-          
-          <div class="code-title" style="width: 100%;box-sizing: border-box;">&nbsp;&nbsp;.gitconfig de GeoPozo</div>
-          <code class="block with-title" style="width: 100%;/*! height: 100%; */font-size: 12px;line-height: 18px;box-sizing: border-box;"> [alias]
-   grafico-corto  = log --oneline --graph --decorate --all --simplify-by-decoration
-   ramas          = branch -avv
-   remotos        = remote -v
-   unalinea       = log --pretty=format:"%C(auto)%h%x20%an%x20%C(dim)%ad%C(auto)%d%x20%s" --date=short
-   tags-ordenados = tag -l --sort=-v:refname
- [fetch]
-   prune          = true
- [core]
-   quotepath      = off</code>
-          <div style="float: right;width: 10cm;margin-top: 5px;box-sizing: border-box;"><p class="alert important title" style="border-color: purple;color: purple;">👾</p><p class="alert important" style="border-color: purple;">Hay mas: <a>github.com/geopozo/configs</a></p></div><p class="alert warning title" style="margin-top: 5px !important;box-sizing: border-box;">⚠️</p><p class="alert warning" style="box-sizing: border-box;">Mejor evitar uso del lavavillas. </p>
-          
-          
-          
-          
-          
-          
-          
-        </div></div><style type="text/css"></style></body></html>
+      </div>
+    </div>
+    <style type="text/css"></style>
+    <script>hljs.highlightAll()</script>
+  </body>
+</html>
