@@ -6,14 +6,19 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
-    import asyncio
-    import random
-    import time
+    import asyncio # herramientas para asyncio
+    import json # cargar y imprimir json
+    import random # números alreatorios
+    import time # sleep, contar segundos, etc
+    from pathlib import Path # operaciónes para archivos
 
-    import viztracer
-    import marimo as mo
+    import viztracer # calcular disempeño de funciones
+    import marimo as mo # funciones para este cuaderno
+    import plotly.graph_objects as go # gráficos
 
-    return asyncio, mo, time, viztracer
+    # nuestras herramientas
+    from pycon_co_2025_geopozo import icicle
+    return Path, asyncio, go, icicle, mo, time, viztracer
 
 
 @app.cell(hide_code=True)
@@ -46,95 +51,8 @@ def _(mo):
 
 
 @app.cell
-def _(time, viztracer):
-    # DEFINICIÓN
-
-    def siesta():
-        time.sleep(1)
-
-    def gato():
-        siesta()
-        siesta()
-        print("miau")
-
-    def yo():
-        siesta()
-        print("buen día")
-
-    # CONTAR
-
-    _inicio = time.perf_counter() # marcar hora
-
-    gato() # mi gato
-    yo() # yo
-
-    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
-
-    # MIRAR FLAMEGRAPH
-
-    with (
-        viztracer.VizTracer(
-            output_file=( _path := "results/sync_profile.json"),
-            verbose=0
-        ),
-    ):
-        gato()
-        yo()
-
-    # usar plotly icicle (con convertador) o https://www.speedscope.app/
-    return
-
-
-@app.cell
-async def _(asyncio, time, viztracer):
-    # DEFINICIÓN
-
-    async def siesta_async():
-        await asyncio.sleep(1)
-
-    async def gato_async():
-        await siesta_async()
-        await siesta_async()
-        print("miau")
-
-    async def yo_async():
-        await siesta_async()
-        print("buen día")
-
-    # CONTAR
-
-    _inicio = time.perf_counter() # marcar hora
-
-    await gato_async()
-    await yo_async()
-
-    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
-
-    # MIRAR FLAMEGRAPH
-
-    with (
-        viztracer.VizTracer(
-            output_file=( _path := "results/async_profile.json"),
-            verbose=0
-        ),
-    ):
-        await gato_async()
-        await yo_async()
-
-    # usar plotly icicle (con convertador) o https://www.speedscope.app/
-    return gato_async, yo_async
-
-
-@app.cell
-async def _(asyncio, gato_async, time, yo_async):
-    _inicio = time.perf_counter() # marcar hora
-
-    _t1 = asyncio.create_task(gato_async())
-    _t2 = asyncio.create_task(yo_async())
-
-    resultados = await asyncio.gather(_t1, _t2) # que python
-
-    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
+def _():
+    # Info graphic table
     return
 
 
@@ -183,6 +101,148 @@ def _(mo):
 
 
 @app.cell
+def _(Path, go, icicle, time, viztracer):
+    # DEFINICIÓN
+
+
+    def siesta():
+        time.sleep(1)
+
+    def gato():
+        siesta()
+        siesta()
+        print("miau")
+
+    def yo():
+        siesta()
+        print("buen día")
+
+    # CONTAR
+
+    _inicio = time.perf_counter() # marcar hora
+
+    gato() # mi gato
+    yo() # yo
+
+    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
+
+    # CALCULAR FLAMEGRAPH
+
+    with (
+        viztracer.VizTracer(
+            output_file=( _path := "results/sync_profile.json"),
+            verbose=0
+        ),
+    ):
+        gato()
+        yo()
+
+    ## MOSTRAR GRÁFICO
+
+    _labels, _parents, _values = icicle.from_threads(
+        icicle.sort_and_strip_json(Path(_path))
+    )
+
+    _fig = go.Figure(go.Icicle(
+            labels=_labels,
+            parents=_parents,
+            values=_values,
+            branchvalues="total",
+            textinfo="label",
+            textfont=dict(size=20),
+            tiling = dict(
+                orientation='v',
+                flip='y'
+            )
+        ))
+    _fig.update_layout(
+            title="Perfíl por Hilo",
+            margin=dict(l=10, r=10, t=40, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
+        )
+    _fig.show() # o https://www.speedscope.app/
+    return
+
+
+@app.cell
+async def _(Path, asyncio, go, icicle, time, viztracer):
+    # DEFINICIÓN
+
+    async def siesta_async():
+        await asyncio.sleep(1)
+
+    async def gato_async():
+        await siesta_async()
+        await siesta_async()
+        print("miau")
+
+    async def yo_async():
+        await siesta_async()
+        print("buen día")
+
+    # CONTAR
+
+    _inicio = time.perf_counter() # marcar hora
+
+    await gato_async()
+    await yo_async()
+
+    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
+
+    # MIRAR FLAMEGRAPH
+
+    with (
+        viztracer.VizTracer(
+            output_file=( _path := "results/async_profile.json"),
+            verbose=0
+        ),
+    ):
+        await gato_async()
+        await yo_async()
+
+    _labels, _parents, _values = icicle.from_threads(
+        icicle.sort_and_strip_json(Path(_path))
+    )
+
+    _fig = go.Figure(go.Icicle(
+            labels=_labels,
+            parents=_parents,
+            values=_values,
+            branchvalues="total",
+            textinfo="label",
+            textfont=dict(size=20),
+            tiling = dict(
+                orientation='v',
+                flip='y'
+            )
+        ))
+    _fig.update_layout(
+            title="Perfíl por Hilo",
+            margin=dict(l=10, r=10, t=40, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
+        )
+    _fig.show() # o https://www.speedscope.app/
+    return gato_async, yo_async
+
+
+@app.cell
+async def _(asyncio, gato_async, time, yo_async):
+
+    _t1 = asyncio.create_task(gato_async())
+    _t2 = asyncio.create_task(yo_async())
+
+
+    _inicio = time.perf_counter() # marcar hora
+
+    resultados = await asyncio.gather(_t1, _t2) # que python
+
+    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(
         r"""
@@ -226,8 +286,10 @@ def _(mo):
 
 @app.cell
 def _(mo):
-    import pycon_co_2025_geopozo.dag as dag
-
+    from pycon_co_2025_geopozo import dag
+    # yes, they need to be able to point at the same thing
+    # we need to be able to draw curves (split, length=2, blue, etc, no constraint)
+    # and we need to show errores
     tree = {"A": {"B": ["D", "E"], "C": []}, "X": ["C", "F"]}
 
     mo.Html(dag.from_function_tree(tree))
@@ -624,6 +686,11 @@ def _(mo):
         <!-- A line for today -->
         <line class="release-cycle-today-line" x1="462.98762376237624" x2="462.98762376237624" y1="0" y2="351.0" font-size="18" style="stroke:rgb(61, 148, 255); stroke-width:1.6px; "/>
     </svg>""")
+    return
+
+
+@app.cell
+def _():
     return
 
 

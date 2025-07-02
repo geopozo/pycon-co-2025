@@ -203,6 +203,24 @@ wheels = [
 ]
 
 [[package]]
+name = "jq"
+version = "1.9.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/af/f7/d88a49335beeb2b51945e4c57fa570f412b5f0200064e9130defb3293a16/jq-1.9.1.tar.gz", hash = "sha256:fa138b9062a854908cfccd7fbb2375a77c44612c7212172834990b2f9664a7b7", size = 1913432, upload-time = "2025-06-15T14:58:58.031Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/50/b4/fb552b5623283fe02180975ec37eb7f29b512d6129e3e1eb2668525863cf/jq-1.9.1-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:70e029dd97b5313537fce6a17f51df735b92abdaf9e8b22cb72cd1084c3ab96d", size = 419309, upload-time = "2025-06-15T14:57:12.105Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/c5/452edb5ffb3ce695c84f582723e12c95468c79f6c7e4254035ce21fd8a90/jq-1.9.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:3e997d945603669b943877c5a686f1ac8577f2cd9c07a56db4c96acdb3e76abf", size = 425340, upload-time = "2025-06-15T14:57:14.025Z" },
+    { url = "https://files.pythonhosted.org/packages/ea/5d/aa9e0b73250ccb376757f0842dc15b63761aefe0633c564710c6feaf2c27/jq-1.9.1-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:35f017a06b5f65ab2219e740a56989566ff712071c90699f00681cc223416d3e", size = 735821, upload-time = "2025-06-15T14:57:15.947Z" },
+    { url = "https://files.pythonhosted.org/packages/6c/11/eef6ac8d43c47e2446df6f1cb117201ff092510c80caf924c23d6e8439d7/jq-1.9.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:909d82ae21e44bc37c249d180d5e24aa4c40fae0f2dc5feb081772c992f9f492", size = 754346, upload-time = "2025-06-15T14:57:17.825Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/1c/89b75ec9dd7ac035f51d3d7fd00471c6c51daf1ca0d7b0588cdd0d64c96c/jq-1.9.1-cp313-cp313-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:584d0a2405202a43ce8abac59a025bc6561aa32f6ec21f17dee997903501bae1", size = 742535, upload-time = "2025-06-15T14:57:19.992Z" },
+    { url = "https://files.pythonhosted.org/packages/4f/40/9702261d342b9b996ddb2a3dcc41893837a171e8a0bae3b247f3e30ef5fa/jq-1.9.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:10ad57158e447f8f13abaa2a809517633ffa4de6b08919a52d83001afa64492d", size = 738767, upload-time = "2025-06-15T14:57:24.2Z" },
+    { url = "https://files.pythonhosted.org/packages/da/b7/79441809ac4c2ecc4cc4a43d4e19494a862441717a138e9a2c15d4cac698/jq-1.9.1-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:8dfca396b1e02cac44c75b2b06db1c199aadc7533d886d8e7c66d81f006562e3", size = 765338, upload-time = "2025-06-15T14:57:27.43Z" },
+    { url = "https://files.pythonhosted.org/packages/f9/2a/c5d69a075ed10385143360d90026ed686663b189fba399e7ca66443835e7/jq-1.9.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:11f94299be58b1733d7308650a8b9e35269d7821f64e9925bb8121fcfbd0dcc8", size = 769818, upload-time = "2025-06-15T14:57:30.086Z" },
+    { url = "https://files.pythonhosted.org/packages/ea/48/e0a896b85948981d859800e8d004294eb15c35debcf64c89132536c697c2/jq-1.9.1-cp313-cp313-win32.whl", hash = "sha256:6141ad7539e2186e33dffceed829cd9828327fa2c2c375c351c2f933c707be8d", size = 410300, upload-time = "2025-06-15T14:57:31.867Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/f0/ddcc0a47ed6385a8e34160fabff3b841abc17d2a9b13b91224eea726ef78/jq-1.9.1-cp313-cp313-win_amd64.whl", hash = "sha256:e55938fcc2c964d4be6b7984188d438336d063605cfb109ddd57d38931548ed1", size = 423144, upload-time = "2025-06-15T14:57:33.505Z" },
+]
+
+[[package]]
 name = "jsonschema"
 version = "4.24.0"
 source = { registry = "https://pypi.org/simple" }
@@ -441,6 +459,19 @@ wheels = [
 ]
 
 [[package]]
+name = "plotly"
+version = "6.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "narwhals" },
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6e/5c/0efc297df362b88b74957a230af61cd6929f531f72f48063e8408702ffba/plotly-6.2.0.tar.gz", hash = "sha256:9dfa23c328000f16c928beb68927444c1ab9eae837d1fe648dbcda5360c7953d", size = 6801941, upload-time = "2025-06-26T16:20:45.765Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ed/20/f2b7ac96a91cc5f70d81320adad24cc41bf52013508d649b1481db225780/plotly-6.2.0-py3-none-any.whl", hash = "sha256:32c444d4c940887219cb80738317040363deefdfee4f354498cc0b6dab8978bd", size = 9635469, upload-time = "2025-06-26T16:20:40.76Z" },
+]
+
+[[package]]
 name = "pluggy"
 version = "1.6.0"
 source = { registry = "https://pypi.org/simple" }
@@ -512,8 +543,10 @@ name = "pycon-co-2025-geopozo"
 source = { editable = "." }
 dependencies = [
     { name = "graphviz" },
+    { name = "jq" },
     { name = "marimo" },
     { name = "nbformat" },
+    { name = "plotly" },
     { name = "viztracer" },
 ]
 
@@ -529,8 +562,10 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "graphviz", specifier = ">=0.21" },
+    { name = "jq", specifier = ">=1.9.1" },
     { name = "marimo", specifier = ">=0.14.9" },
     { name = "nbformat", specifier = ">=5.10.4" },
+    { name = "plotly", specifier = ">=6.2.0" },
     { name = "viztracer", specifier = ">=1.0.4" },
 ]
 
