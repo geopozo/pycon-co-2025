@@ -1,4 +1,5 @@
 """dag helps create graphs from function dictionaries."""
+import uuid
 from typing import TypeAlias, cast
 
 from graphviz import Digraph  # type: ignore[import-untyped]
@@ -93,28 +94,28 @@ def from_function_tree(tree: Node) -> str:
             "You must install graphviz to use this function. "
             "https://graphviz.org/download/"
         ) from e
-
-    return """
+    class_name = uuid.uuid4().hex[:length]
+    return f"""
     <style>
       /* Set default text + line color via currentColor */
-      svg * {
+      .{class_name} svg * {{
         stroke: currentColor;
-      }
-      svg text {
+      }}
+      .{class_name} svg text {{
           fill: currentColor;
           font-weight: 100;
           letter-spacing: .1em;
-      }
+      }}
 
       /* Light mode default */
-      :root {
+      :root {{
         color: black;
-      }
+      }}
 
       /* Dark mode override */
-      @media (prefers-color-scheme: dark) {
-        :root {
+      @media (prefers-color-scheme: dark) {{
+        :root {{
           color: white;
-        }
-      }
-    </style>"""+f'<div style="text-align:center">{svg}</div>'
+        }}
+      }}
+    </style>"""+f'<div class="{class_name}" style="text-align:center">{svg}</div>'
