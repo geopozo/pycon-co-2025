@@ -21,6 +21,7 @@ def _():
     import asyncio # herramientas para asyncio
     import json # cargar y imprimir json
     import math
+    import pprint
     import random # números alreatorios
     import time # sleep, contar segundos, etc
     from pathlib import Path # operaciónes para archivos
@@ -31,7 +32,7 @@ def _():
 
     # nuestras herramientas
     from pycon_co_2025_geopozo import dag, icicle
-    return Path, asyncio, dag, go, icicle, math, mo, time, viztracer
+    return Path, asyncio, dag, go, icicle, math, mo, pprint, time, viztracer
 
 
 @app.cell(hide_code=True)
@@ -796,19 +797,84 @@ def _(dag, mo, tree1):
 
 
 @app.cell
-async def _(TimeOutError, asyncio, gato_async, yo_async):
+async def _(asyncio, pprint):
+    async def error(i):
+        if not i % 2: # "si es par"
+            await asyncio.sleep(i/10)
+            print(f"Devolviendo {i!s}")
+            return i
+        raise ValueError(f"Error: {i!s}")
+
+    _t = [error(i) for i in range(10)]
+    _r = await asyncio.gather(*_t, return_exceptions=True)
+
+    pprint.pp(_r)
+    return (error,)
+
+
+@app.cell
+async def _(asyncio, e, error):
+    try:
+        _t = [error(i) for i in range(10)]
+        _r = await asyncio.gather(*_t)
+    except ValueError as e:
+        print(e)
+
+    print("")
+
+    for i, t in enumerate(_t):
+        try:
+            print(f"corutina {i}: {await t}")
+        except RuntimeError as e:
+            print(f"corutina {i} ya esperada?: {e}")
+        except ValueError:
+            print(f"corutina {i} acaba de da el error esperado: {e}")
+
+    print("")
+    print("")
+    print("")
+
+    for i, t in enumerate(_t):
+        t = asyncio.create_task(t)
+        try:
+            print(f"corutina {i}: {await t}")
+        except RuntimeError as e:
+            print(f"corutina {i} ya esperada?: {e}")
+        except ValueError:
+            print(f"corutina {i} acaba de da el error esperado: {e}")
+    return
+
+
+@app.cell
+async def _(asyncio, gato_async, pprint, yo_async):
+    _t1 = gato_async()
+    _t2 = yo_async()
+    try:
+        async with asyncio.timeout(.7):
+            await asyncio.gather(
+                _t1,
+                _t2,
+            )
+    finally:
+        pprint.pp(await asyncio.gather(_t1, _t2, return_exceptions=True))
+
+    return
+
+
+@app.cell
+async def _(asyncio, gato_async, yo_async):
     async def gato_y_yo_gather():
         try:
             _t1 = asyncio.create_task(gato_async())
             _t2 = asyncio.create_task(yo_async())
         
             resultados = await asyncio.gather(_t1, _t2)
-        except TimeoutError as e:
+        except (asyncio.CancelledError) as e:
             _t1.cancel() # también puedes cancelar gather directo si quieres
             _t2.cancel()
-            await _t1
-            await _t2
-            raise TimeOutError("Timeout, el resto cancelado.") from e
+            await asyncio.gather(_t1, _t2, return_exceptions=True)
+            raise TimeoutError("Timeout, el resto cancelado.") from e
+        
         return resultados
 
     async with asyncio.timeout(.2):
@@ -816,43 +882,23 @@ async def _(TimeOutError, asyncio, gato_async, yo_async):
     return
 
 
-@app.cell
-async def _(asyncio, gato_async, yo_async):
+app._unparsable_cell(
+    r"""
     async def gato_y_yo_gather_collect():
         resultados = await asyncio.gather(
             gato_async(),
             yo_async(),
             return_exceptions=True
-        )
+        ))
         # nada cancela, todo hasta el fin
 
         errores = ExceptionGroup([t for t in resultados if isinstance(t, Exception)])
         if errores:
             raise errores
         return resultados
-
-    async with asyncio.timeout(.2):
-        await gato_y_yo_gather_collect()
-    return
-
-
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    Do another graph with create tasks
-
-    ## gather
-    - sin collecionar
-    - coleccionar
-    - task groups?
-    - cancelacion
-    - finally, or in except
-    - otra manera de hacer una tarea
-    - cuando necesitamos
-    """
-    )
-    return
+    """,
+    name="_"
+)
 
 
 @app.cell
