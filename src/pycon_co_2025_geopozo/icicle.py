@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Literal
 
 import jq  # pip install jq
-import plotly.graph_objects as go
 
 BranchValuesOptions = Literal["total", "remainder"]
 

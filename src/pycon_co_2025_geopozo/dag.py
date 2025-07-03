@@ -82,7 +82,7 @@ def _render_dag(tree: Node) -> str:
     for parent_id, child_id in edges:
         dot.edge(parent_id, child_id)
 
-    return cast(str, dot.pipe().decode("utf-8"))   # raw <svg>…</svg> string
+    return cast("str", dot.pipe().decode("utf-8"))   # raw <svg>…</svg> string
 
 # Example usage:
 def from_function_tree(tree: Node) -> str:
