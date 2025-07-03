@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.14.9"
+__generated_with = "0.14.10"
 app = marimo.App(
     width="medium",
     layout_file="layouts/el Asincronismo y la Concurrencia de Python en 2025.slides.json",
@@ -446,7 +446,10 @@ def _(mo):
 
         <!-- A line for today -->
         <line class="release-cycle-today-line" x1="462.98762376237624" x2="462.98762376237624" y1="0" y2="351.0" font-size="18" style="stroke:rgb(61, 148, 255); stroke-width:1.6px; "/>
-    </svg>""")
+    </svg>
+
+    source: https://devguide.python.org/versions/"""
+    )
     return
 
 
@@ -458,57 +461,7 @@ def _():
 
 
 @app.cell
-def _():
-    # Cheat Sheet mugs
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.hstack(
-        [
-            mo.md(r"""
-    # Sincrona
-    ```python
-    def siesta():
-        time.sleep(1)
-
-    def gato():
-        siesta()
-        siesta()
-        print("miau")
-
-    def yo():
-        siesta()
-        print("buen día")
-    ```
-    """),
-            mo.md(r"""
-    # Asincrona
-    ```python
-    async def siesta_async():
-        await asyncio.sleep(1)
-
-    async def gato_async():
-        await siesta_async()
-        await siesta_async()
-        print("miau")
-
-    async def yo_async():
-        await siesta_async()
-        print("buen día")
-    ```"""),
-        ],
-        justify="center",
-        gap=1
-    )
-
-    # acá hagamos comparison de flamegraph real
-    return
-
-
-@app.cell
-def _(time):
+def sync_code(time):
     # DEFINICIÓN
     def siesta():
         time.sleep(1)
@@ -666,28 +619,76 @@ async def _(Path, gato_async, go, icicle, math, viztracer, yo_async):
 @app.cell
 async def _(asyncio, gato_async, time, yo_async):
 
-    _t1 = asyncio.create_task(gato_async())
-    _t2 = asyncio.create_task(yo_async())
-
-
     _inicio = time.perf_counter() # marcar hora
 
-    resultados = await asyncio.gather(_t1, _t2) # que python
+    resultados = await asyncio.gather(
+        gato_async(),
+        yo_async()
+    )
 
     print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
     return
 
 
 @app.cell(hide_code=True)
-def _(dag, mo):
-    tree1 = {dag.Node("gather", "0"): {dag.Node("gato", "1"): ["siesta", "siesta"], "yo": ["siesta"]}}
-    errors = [("1", "0", "gato bravo!")]
+def _(mo):
+    mo.hstack(
+        [
+            mo.md(r"""
+    # Sincrona
+    ```python
+    def siesta():
+        time.sleep(1)
 
+    def gato():
+        siesta()
+        siesta()
+        print("miau")
+
+    def yo():
+        siesta()
+        print("buen día")
+    ```
+    """),
+            mo.md(r"""
+    # Asincrona
+    ```python
+    async def siesta_async():
+        await asyncio.sleep(1)
+
+    async def gato_async():
+        await siesta_async()
+        await siesta_async()
+        print("miau")
+
+    async def yo_async():
+        await siesta_async()
+        print("buen día")
+    ```"""),
+        ],
+        justify="center",
+        gap=1
+    )
+
+    # acá hagamos comparison de flamegraph real
+    return
+
+
+@app.cell(hide_code=True)
+def _(Path, mo):
+    mo.image(Path("public/mug_screenshot.png"))
+    return
+
+
+@app.cell(hide_code=True)
+def _(dag, mo):
+    tree1 = {dag.Node("gather", "0"): {dag.Node("gato", "1"): ["siesta", "siesta"], "yo": [dag.Node("siesta","2")]}}
+    errors1 = [("1", "0", {})]
     mo.vstack(
         [
             mo.hstack(
                 [
-                    (grafo1 := mo.Html(dag.from_function_tree(tree1, errors))),
+                    mo.Html(dag.from_function_tree(tree1, errors1)),
                     mo.md(r"""# Un DAG (Grafo Acíclico Dirigido)
     Ayuda más con el pensamiento.
 
@@ -714,7 +715,7 @@ def _(dag, mo):
                 gap=3,
             ),
             mo.md(
-    """> Y de dónde vienen los errores? Normalmente desde bajo. Pero con async/await, no. Vienen de odos lados.  
+    """> ¿Y de dónde vienen los errores? Normalmente desde bajo. Pero con async/await, no. Vienen de odos lados.  
     También no vemos toda la misma información."""
             ),
         ],
@@ -759,15 +760,19 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(dag, mo, tree1):
-    tree2 = {"timeout": tree1}
-    # errores desde bajo
+    tree2 = {dag.Node("timeout", "-1"): tree1}
+    errors2 = [
+        ("-1", "1", {}),
+        ("-1", "2", {}),
+    ]
+
     mo.vstack(
         [
             mo.hstack(
                 [
-                    (grafo2 := mo.Html(dag.from_function_tree(tree2))),
+                    mo.Html(dag.from_function_tree(tree2,errors2)),
                     mo.md(r"""
     ```python
     # python v3.11
@@ -781,11 +786,53 @@ def _(dag, mo, tree1):
                 gap=3,
             ),
             mo.md(
-                """> Si nosotros creamos un API, usuarios pueden cancelar nuestras tareas sin permiso."""
+                """> Si nosotros creamos un API, usuarios pueden cancelar nuestras tareas sin permiso.  
+                ¿Qué hacemos con los errores? ¿Cancelar? ¿Capturar para crear uno solo?"""
             ),
         ],
         align="center",
     )
+    return
+
+
+@app.cell
+async def _(TimeOutError, asyncio, gato_async, yo_async):
+    async def gato_y_yo_gather():
+        try:
+            _t1 = asyncio.create_task(gato_async())
+            _t2 = asyncio.create_task(yo_async())
+        
+            resultados = await asyncio.gather(_t1, _t2)
+        except TimeoutError as e:
+            _t1.cancel() # también puedes cancelar gather directo si quieres
+            _t2.cancel()
+            await _t1
+            await _t2
+            raise TimeOutError("Timeout, el resto cancelado.") from e
+        return resultados
+
+    async with asyncio.timeout(.2):
+        await gato_y_yo_gather()
+    return
+
+
+@app.cell
+async def _(asyncio, gato_async, yo_async):
+    async def gato_y_yo_gather_collect():
+        resultados = await asyncio.gather(
+            gato_async(),
+            yo_async(),
+            return_exceptions=True
+        )
+        # nada cancela, todo hasta el fin
+
+        errores = ExceptionGroup([t for t in resultados if isinstance(t, Exception)])
+        if errores:
+            raise errores
+        return resultados
+
+    async with asyncio.timeout(.2):
+        await gato_y_yo_gather_collect()
     return
 
 
