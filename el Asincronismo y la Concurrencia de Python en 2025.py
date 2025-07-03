@@ -1,13 +1,26 @@
 import marimo
 
 __generated_with = "0.14.9"
-app = marimo.App(width="medium")
+app = marimo.App(
+    width="medium",
+    layout_file="layouts/el Asincronismo y la Concurrencia de Python en 2025.slides.json",
+)
+
+
+@app.cell
+def _():
+    # hacer un QR
+    # como installar
+    # donde está el github
+    # should we do threads too?
+    return
 
 
 @app.cell
 def _():
     import asyncio # herramientas para asyncio
     import json # cargar y imprimir json
+    import math
     import random # números alreatorios
     import time # sleep, contar segundos, etc
     from pathlib import Path # operaciónes para archivos
@@ -18,7 +31,7 @@ def _():
 
     # nuestras herramientas
     from pycon_co_2025_geopozo import icicle
-    return Path, asyncio, go, icicle, mo, time, viztracer
+    return Path, asyncio, go, icicle, math, mo, time, viztracer
 
 
 @app.cell(hide_code=True)
@@ -47,258 +60,6 @@ def _(mo):
     - geopozo.github.io/loquesea (RO, proabably cambiamos nombre)
     """
     )
-    return
-
-
-@app.cell
-def _():
-    # Info graphic table
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.hstack(
-        [
-            mo.md(r"""
-    # Sincrona
-    ```python
-    def siesta():
-        time.sleep(1)
-
-    def gato():
-        siesta()
-        siesta()
-        print("miau")
-
-    def yo():
-        siesta()
-        print("buen día")
-    ```
-    """),
-            mo.md(r"""
-    # Asincrona
-    ```python
-    async def siesta_async():
-        await asyncio.sleep(1)
-
-    async def gato_async():
-        await siesta_async()
-        await siesta_async()
-        print("miau")
-
-    async def yo_async():
-        await siesta_async()
-        print("buen día")
-    ```"""),
-        ],
-        justify="center",
-        gap=1
-    )
-
-    # acá hagamos comparison de flamegraph real
-    return
-
-
-@app.cell
-def _(Path, go, icicle, time, viztracer):
-    # DEFINICIÓN
-
-
-    def siesta():
-        time.sleep(1)
-
-    def gato():
-        siesta()
-        siesta()
-        print("miau")
-
-    def yo():
-        siesta()
-        print("buen día")
-
-    # CONTAR
-
-    _inicio = time.perf_counter() # marcar hora
-
-    gato() # mi gato
-    yo() # yo
-
-    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
-
-    # CALCULAR FLAMEGRAPH
-
-    with (
-        viztracer.VizTracer(
-            output_file=( _path := "results/sync_profile.json"),
-            verbose=0
-        ),
-    ):
-        gato()
-        yo()
-
-    ## MOSTRAR GRÁFICO
-
-    _labels, _parents, _values = icicle.from_threads(
-        icicle.sort_and_strip_json(Path(_path))
-    )
-
-    _fig = go.Figure(go.Icicle(
-            labels=_labels,
-            parents=_parents,
-            values=_values,
-            branchvalues="total",
-            textinfo="label",
-            textfont=dict(size=20),
-            tiling = dict(
-                orientation='v',
-                flip='y'
-            )
-        ))
-    _fig.update_layout(
-            title="Perfíl por Hilo",
-            margin=dict(l=10, r=10, t=40, b=10),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)"
-        )
-    _fig.show() # o https://www.speedscope.app/
-    return
-
-
-@app.cell
-async def _(Path, asyncio, go, icicle, time, viztracer):
-    # DEFINICIÓN
-
-    async def siesta_async():
-        await asyncio.sleep(1)
-
-    async def gato_async():
-        await siesta_async()
-        await siesta_async()
-        print("miau")
-
-    async def yo_async():
-        await siesta_async()
-        print("buen día")
-
-    # CONTAR
-
-    _inicio = time.perf_counter() # marcar hora
-
-    await gato_async()
-    await yo_async()
-
-    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
-
-    # MIRAR FLAMEGRAPH
-
-    with (
-        viztracer.VizTracer(
-            output_file=( _path := "results/async_profile.json"),
-            verbose=0
-        ),
-    ):
-        await gato_async()
-        await yo_async()
-
-    _labels, _parents, _values = icicle.from_threads(
-        icicle.sort_and_strip_json(Path(_path))
-    )
-
-    _fig = go.Figure(go.Icicle(
-            labels=_labels,
-            parents=_parents,
-            values=_values,
-            branchvalues="total",
-            textinfo="label",
-            textfont=dict(size=20),
-            tiling = dict(
-                orientation='v',
-                flip='y'
-            )
-        ))
-    _fig.update_layout(
-            title="Perfíl por Hilo",
-            margin=dict(l=10, r=10, t=40, b=10),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)"
-        )
-    _fig.show() # o https://www.speedscope.app/
-    return gato_async, yo_async
-
-
-@app.cell
-async def _(asyncio, gato_async, time, yo_async):
-
-    _t1 = asyncio.create_task(gato_async())
-    _t2 = asyncio.create_task(yo_async())
-
-
-    _inicio = time.perf_counter() # marcar hora
-
-    resultados = await asyncio.gather(_t1, _t2) # que python
-
-    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
-    return
-
-
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    # Arregular scripts/
-
-    Hacer threads GIL/no-GIL
-    # Errores
-
-    Ya vienen de arriba, también desde funciones inocentes (asyncio.sleep)
-
-    ## Usa Try/Finally
-
-    Puedes usar finally para operaciones criticas
-
-    # Gather
-
-    - Como se usa, que hacemos con errors
-    - Cancelación
-    - Functiona except *?
-
-    # TaskGroup
-
-    - Como se hace un gather()?
-    - Si se sale del contexto, se cancelan los errores?
-    - Podemos usar callbacks para sobreescribir comportamiento?
-      -  Intenta dos veces
-      -  Leventar Error Nuevo
-    - Grupos de errores
-    - Cancelación automatica (context sin context)
-
-    Quieres seguir? O quieres parar. Qué hacemos. Y qué hacemos cuando nos
-    cancelamos.
-
-    # Tres tipos de "esperables"
-
-    # async with, async for
-    """
-    )
-    return
-
-
-@app.cell
-def _(mo):
-    from pycon_co_2025_geopozo import dag
-    # yes, they need to be able to point at the same thing
-    # we need to be able to draw curves (split, length=2, blue, etc, no constraint)
-    # and we need to show errores
-    tree = {"A": {"B": ["D", "E"], "C": []}, "X": ["C", "F"]}
-
-    mo.Html(dag.from_function_tree(tree))
-    return
-
-
-@app.cell
-def _(mo):
-    mo.md(r"""# GIL""")
     return
 
 
@@ -686,6 +447,414 @@ def _(mo):
         <!-- A line for today -->
         <line class="release-cycle-today-line" x1="462.98762376237624" x2="462.98762376237624" y1="0" y2="351.0" font-size="18" style="stroke:rgb(61, 148, 255); stroke-width:1.6px; "/>
     </svg>""")
+    return
+
+
+@app.cell
+def _():
+    # Info graphic table
+    # fix SVG above w/ link
+    return
+
+
+@app.cell
+def _():
+    # Cheat Sheet mugs
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.hstack(
+        [
+            mo.md(r"""
+    # Sincrona
+    ```python
+    def siesta():
+        time.sleep(1)
+
+    def gato():
+        siesta()
+        siesta()
+        print("miau")
+
+    def yo():
+        siesta()
+        print("buen día")
+    ```
+    """),
+            mo.md(r"""
+    # Asincrona
+    ```python
+    async def siesta_async():
+        await asyncio.sleep(1)
+
+    async def gato_async():
+        await siesta_async()
+        await siesta_async()
+        print("miau")
+
+    async def yo_async():
+        await siesta_async()
+        print("buen día")
+    ```"""),
+        ],
+        justify="center",
+        gap=1
+    )
+
+    # acá hagamos comparison de flamegraph real
+    return
+
+
+@app.cell
+def _(time):
+    # DEFINICIÓN
+    def siesta():
+        time.sleep(1)
+
+    def gato(p=True):
+        siesta()
+        siesta()
+        if p:
+            print("miau")
+
+    def yo(p=True):
+        siesta()
+        if p:
+            print("buen día")
+    return gato, yo
+
+
+@app.cell
+def _(gato, time, yo):
+    # CONTAR
+    _inicio = time.perf_counter() # marcar hora
+
+    gato() # mi gato
+    yo() # yo
+
+    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
+    return
+
+
+@app.cell
+def _(Path, gato, go, icicle, math, viztracer, yo):
+    # CALCULAR FLAMEGRAPH
+
+    with (
+        viztracer.VizTracer(
+            output_file=( _path := "results/sync_profile.json"),
+            verbose=0
+        ),
+    ):
+        gato(False)
+        yo(False)
+
+    ## MOSTRAR GRÁFICO
+
+    _labels, _parents, _values = icicle.from_threads(
+        icicle.sort_and_strip_json(Path(_path))
+    )
+
+    _fig = go.Figure(go.Icicle(
+            labels=_labels,
+            parents=_parents,
+            values=[math.log1p(v) for v in _values],
+            branchvalues="remainder",
+            textinfo="label",
+            textfont=dict(size=20),
+            marker=dict(
+                line=dict(
+                width=2,
+                color="black"
+                ),
+            ),
+            tiling = dict(
+                orientation='v',
+            )
+        ))
+    _fig.update_layout(
+            title="Perfíl por Hilo",
+            margin=dict(l=10, r=10, t=40, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
+        )
+    _fig.show() # o https://www.speedscope.app/ # TO lots otros
+    return
+
+
+@app.cell
+def _(asyncio):
+    # DEFINICIÓN
+
+    async def siesta_async(): # estas son corutinas
+        await asyncio.sleep(1)
+
+    async def gato_async(p=True):
+        await siesta_async()
+        await siesta_async()
+        if p:
+            print("miau")
+
+    async def yo_async(p=True):
+        await siesta_async()
+        if p:
+            print("buen día")
+
+    # cuales son las reglas de corutinas
+    return gato_async, yo_async
+
+
+@app.cell
+async def _(gato_async, time, yo_async):
+    # CONTAR
+
+    _inicio = time.perf_counter() # marcar hora
+
+    await gato_async()
+    await yo_async()
+
+    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
+    return
+
+
+@app.cell
+async def _(Path, gato_async, go, icicle, math, viztracer, yo_async):
+    # MIRAR FLAMEGRAPH
+
+    with (
+        viztracer.VizTracer(
+            output_file=( _path := "results/async_profile.json"),
+            verbose=0
+        ),
+    ):
+        await gato_async(False)
+        await yo_async(False)
+
+    _labels, _parents, _values = icicle.from_threads(
+        icicle.sort_and_strip_json(Path(_path))
+    )
+
+    _fig = go.Figure(go.Icicle(
+            labels=_labels,
+            parents=_parents,
+            values=[math.log1p(v) for v in _values],
+            branchvalues="remainder",
+            textinfo="label",
+            textfont=dict(size=20),
+            marker=dict(
+                line=dict(
+                width=2,
+                color="black"
+                ),
+            ),
+            tiling = dict(
+                orientation='v',
+            )
+        ))
+    _fig.update_layout(
+            title="Perfíl por Hilo",
+            margin=dict(l=10, r=10, t=40, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
+        )
+    _fig.show() # o https://www.speedscope.app/
+    return
+
+
+@app.cell
+async def _(asyncio, gato_async, time, yo_async):
+
+    _t1 = asyncio.create_task(gato_async())
+    _t2 = asyncio.create_task(yo_async())
+
+
+    _inicio = time.perf_counter() # marcar hora
+
+    resultados = await asyncio.gather(_t1, _t2) # que python
+
+    print(f"Duración: {time.perf_counter() - _inicio}") # calcular duración
+    return
+
+
+@app.cell(hide_code=True)
+def _(dag, mo):
+    tree1 = {"gather": {"gato": ["siesta", "siesta"], "yo": ["siesta"]}}
+    # add run time error TODO TODO TODO 
+    mo.vstack(
+        [
+            mo.hstack(
+                [
+                    (grafo1 := mo.Html(dag.from_function_tree(tree1))),
+                    mo.md(r"""# Un DAG (Grafo Acíclico Dirigido)
+    Ayuda más con el pensamiento.
+
+    ```python
+    async def siesta_async():
+        await asyncio.sleep(1)
+
+    async def gato_async():
+        await siesta_async()
+        await siesta_async()
+        raise RuntimeError("gato bravo!") # <---
+        print("miau")
+
+    async def yo_async():
+        await siesta_async()
+        print("buen día")
+
+    await asyncio.gather(gato_async(), yo_async())
+    ```
+            """),
+                ],
+                justify="start",
+                align="center",
+                gap=3,
+            ),
+            mo.md(
+                "> Y de dónde vienen los errores? Normalmente desde bajo. Pero con async/await, no. Vienen de todos lados."
+            ),
+        ],
+        align="center",
+    )
+    return (tree1,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.vstack(
+        [
+            mo.hstack(
+                [
+                    mo.md(r"""
+    ```python
+    try:
+        await asyncio.gather(
+            gato_async(),
+            yo_async(),
+        )
+    except:
+        ... # haz algo con los errores
+    else:
+        ... # si no hay errores! también parte de la familia
+    finally:
+        ... # haz algo en toda situación
+    ```
+            """),
+                ],
+                justify="start",
+                align="center",
+                gap=3,
+            ),
+            mo.md(
+                """> Pero normalmente tenemos que medir, proporcionar, el riesgo de error.
+    > Y si es riesgo, hacemos envoltura de try/await. Pero que peligro hay en un gato dormido?"""
+            ),
+        ],
+        align="center",
+    )
+    return
+
+
+@app.cell
+def _(dag, mo, tree1):
+    tree2 = {"timeout": tree1}
+    # errores desde bajo
+    mo.vstack(
+        [
+            mo.hstack(
+                [
+                    (grafo2 := mo.Html(dag.from_function_tree(tree2))),
+                    mo.md(r"""
+    ```python
+    # python v3.11
+    async with asyncio.timeout(0.5):
+        await una_api.gato_y_yo()
+    ```
+            """),
+                ],
+                justify="start",
+                align="center",
+                gap=3,
+            ),
+            mo.md(
+                """> Si nosotros creamos un API, usuarios pueden cancelar nuestras tareas sin permiso."""
+            ),
+        ],
+        align="center",
+    )
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+    Do another graph with create tasks
+
+    ## gather
+    - sin collecionar
+    - coleccionar
+    - task groups?
+    - cancelacion
+    - finally, or in except
+    - otra manera de hacer una tarea
+    - cuando necesitamos
+    """
+    )
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+    # Arregular scripts/
+
+    Hacer threads GIL/no-GIL
+
+    # TaskGroup
+
+    - Como se hace un gather()?
+    - Si se sale del contexto, se cancelan los errores?
+    - Podemos usar callbacks para sobreescribir comportamiento?
+      -  Intenta dos veces
+      -  Leventar Error Nuevo
+    - Grupos de errores
+    - Cancelación automatica (context sin context)
+
+    Quieres seguir? O quieres parar. Qué hacemos. Y qué hacemos cuando nos
+    cancelamos.
+
+    Gil
+    ## queue
+    """
+    )
+    return
+
+
+@app.cell
+def _(mo):
+    from pycon_co_2025_geopozo import dag
+    # yes, they need to be able to point at the same thing
+    # we need to be able to draw curves (split, length=2, blue, etc, no constraint)
+    # and we need to show errores
+    tree = {"A": {"B": ["D", "E"], "C": []}, "X": ["C", "F"]}
+
+    mo.Html(dag.from_function_tree(tree))
+    return (dag,)
+
+
+@app.cell
+def _(mo):
+    mo.md(
+        r"""
+    # GIL
+
+    demostrar el problema (pero tenemos que ejecutar python programatically.)
+    """
+    )
     return
 
 
