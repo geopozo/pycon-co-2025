@@ -72,7 +72,7 @@ def _dict_to_edges_and_labels( # noqa: C901
     return edges, labels
 
 def _render_dag(tree: Node,
-                errors: list[tuple[str, str]] | None = None
+                errors: list[tuple[str, str, str, dict]] | None = None
                 ) -> str:
     """Render html string of svg."""
     edges, labels = _dict_to_edges_and_labels(tree)
@@ -98,20 +98,22 @@ def _render_dag(tree: Node,
     for parent_id, child_id in edges:
         dot.edge(parent_id, child_id)
     if errors:
-        for e1, e2, label in errors:
+        for e1, e2, args in errors:
             dot.edge(e1, e2,
                      color="red",
                      constraint="false",
-                     label=label,
-                     penwidth="2",
-                     minlen="2",
-                     **{"class":"error-edge"})
+                     style="dotted",
+                     penwidth="1.5",
+                     weight="0",
+                     **{"class":"error-edge"},
+                     **args,
+                     )
     return cast("str", dot.pipe().decode("utf-8"))   # raw <svg>…</svg> string
 
 # Example usage:
 def from_function_tree(
         tree: Node,
-        errors: list[tuple[str, str]] | None= None
+        errors: list[tuple[str, str, str, dict]] | None= None
 ) -> str:
     """Render html string of style + svg."""
     try:
