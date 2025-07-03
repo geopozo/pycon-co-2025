@@ -30,8 +30,8 @@ def _():
     import plotly.graph_objects as go # gráficos
 
     # nuestras herramientas
-    from pycon_co_2025_geopozo import icicle
-    return Path, asyncio, go, icicle, math, mo, time, viztracer
+    from pycon_co_2025_geopozo import dag, icicle
+    return Path, asyncio, dag, go, icicle, math, mo, time, viztracer
 
 
 @app.cell(hide_code=True)
@@ -680,13 +680,14 @@ async def _(asyncio, gato_async, time, yo_async):
 
 @app.cell(hide_code=True)
 def _(dag, mo):
-    tree1 = {"gather": {"gato": ["siesta", "siesta"], "yo": ["siesta"]}}
-    # add run time error TODO TODO TODO 
+    tree1 = {dag.Node("gather", "0"): {dag.Node("gato", "1"): ["siesta", "siesta"], "yo": ["siesta"]}}
+    errors = [("1", "0", "gato bravo!")]
+
     mo.vstack(
         [
             mo.hstack(
                 [
-                    (grafo1 := mo.Html(dag.from_function_tree(tree1))),
+                    (grafo1 := mo.Html(dag.from_function_tree(tree1, errors))),
                     mo.md(r"""# Un DAG (Grafo Acíclico Dirigido)
     Ayuda más con el pensamiento.
 
@@ -713,7 +714,8 @@ def _(dag, mo):
                 gap=3,
             ),
             mo.md(
-                "> Y de dónde vienen los errores? Normalmente desde bajo. Pero con async/await, no. Vienen de todos lados."
+    """> Y de dónde vienen los errores? Normalmente desde bajo. Pero con async/await, no. Vienen de odos lados.  
+    También no vemos toda la misma información."""
             ),
         ],
         align="center",
@@ -829,30 +831,6 @@ def _(mo):
 
     Gil
     ## queue
-    """
-    )
-    return
-
-
-@app.cell
-def _(mo):
-    from pycon_co_2025_geopozo import dag
-    # yes, they need to be able to point at the same thing
-    # we need to be able to draw curves (split, length=2, blue, etc, no constraint)
-    # and we need to show errores
-    tree = {"A": {"B": ["D", "E"], "C": []}, "X": ["C", "F"]}
-
-    mo.Html(dag.from_function_tree(tree))
-    return (dag,)
-
-
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    # GIL
-
-    demostrar el problema (pero tenemos que ejecutar python programatically.)
     """
     )
     return

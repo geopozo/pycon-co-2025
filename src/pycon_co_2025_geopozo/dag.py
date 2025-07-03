@@ -1,43 +1,56 @@
 """dag helps create graphs from function dictionaries."""
 import uuid
-from typing import TypeAlias, cast
+from typing import NamedTuple, TypeAlias, cast
 
 from graphviz import Digraph  # type: ignore[import-untyped]
 from graphviz.backend.execute import ExecutableNotFound  # type: ignore[import-untyped]
 
-Node: TypeAlias = ( # noqa: UP040 mypy disagrees
+
+class Node(NamedTuple):
+    """Label and ID a node specifically."""
+
+    label: str
+    id: str
+
+Tree: TypeAlias = ( # noqa: UP040 mypy disagrees
     str
-        | list[str]
-        | tuple[str, ...]
-        | dict[str, "Node"]
+        | list[str | Node] # no lists of trees means no anonymous nodes
+        | tuple[str | Node, ...]
+        | dict[str, "Tree"]
+        | Node
 )
 
 def _dict_to_edges_and_labels( # noqa: C901
-        tree: Node
+        tree: Tree
 ) -> tuple[list[tuple[str, str]], dict[str, str]]:
 
     edges: list[tuple[str, str]]= []
     labels: dict[str, str] = {}
     counts: dict[str, int] = {}
 
-    def make_id(label: str) -> str:
-        counts[label] = counts.get(label, 0) + 1
-        node_id = f"{label}_{counts[label]}"
+    def make_id(node: str | Node) -> str:
+        if isinstance(node, Node):
+            node_id = node.id
+            label = node.label
+        else:
+            label = node
+            counts[label] = counts.get(label, 0) + 1
+            node_id = f"{label}_{counts[label]}"
         labels[node_id] = label
         return node_id
 
-    def walk(subtree: Node, parent_id: str | None=None) -> None: # noqa: C901
+    def walk(subtree: Tree, parent_id: str | None=None) -> None: # noqa: C901
         # If we're at the top-level dict, seed the roots
         if parent_id is None:
-            if isinstance(subtree, dict):
+            if isinstance(subtree, (str | Node)):
+                root_id = make_id(subtree)
+            elif isinstance(subtree, dict):
                 for root_label, child in subtree.items():
                     root_id = make_id(root_label)
                     walk(child, root_id)
             elif isinstance(subtree, (list, tuple)):
                 for root_label in subtree:
                     root_id = make_id(root_label)
-            elif isinstance(subtree, str):
-                root_id = make_id(subtree)
             return
 
         # Otherwise, traverse children
@@ -58,7 +71,9 @@ def _dict_to_edges_and_labels( # noqa: C901
     walk(tree)
     return edges, labels
 
-def _render_dag(tree: Node) -> str:
+def _render_dag(tree: Node,
+                errors: list[tuple[str, str]] | None = None
+                ) -> str:
     """Render html string of svg."""
     edges, labels = _dict_to_edges_and_labels(tree)
     dot = Digraph(format="svg")
@@ -72,7 +87,8 @@ def _render_dag(tree: Node) -> str:
         fontname="sans-serif",
         fontsize="16",
         penwidth="1"  # ← important to avoid thick outlines
-)
+    )
+    dot.attr(splines="polyline")
 
     # Add all nodes (with display labels)
     for node_id, label in labels.items():
@@ -81,14 +97,25 @@ def _render_dag(tree: Node) -> str:
     # Add all edges
     for parent_id, child_id in edges:
         dot.edge(parent_id, child_id)
-
+    if errors:
+        for e1, e2, label in errors:
+            dot.edge(e1, e2,
+                     color="red",
+                     constraint="false",
+                     label=label,
+                     penwidth="2",
+                     minlen="2",
+                     **{"class":"error-edge"})
     return cast("str", dot.pipe().decode("utf-8"))   # raw <svg>…</svg> string
 
 # Example usage:
-def from_function_tree(tree: Node) -> str:
+def from_function_tree(
+        tree: Node,
+        errors: list[tuple[str, str]] | None= None
+) -> str:
     """Render html string of style + svg."""
     try:
-        svg = _render_dag(tree)
+        svg = _render_dag(tree, errors)
     except ExecutableNotFound as e:
         raise RuntimeError(
             "You must install graphviz to use this function. "
@@ -105,6 +132,9 @@ def from_function_tree(tree: Node) -> str:
           fill: currentColor;
           font-weight: 100;
           letter-spacing: .1em;
+      }}
+      .error-edge * {{
+          stroke: red !important;
       }}
 
       /* Light mode default */
