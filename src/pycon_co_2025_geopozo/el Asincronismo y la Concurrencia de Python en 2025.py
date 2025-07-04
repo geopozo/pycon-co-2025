@@ -7,7 +7,7 @@ app = marimo.App(width="medium")
 @app.cell
 def sala_01(Path, mo):
     mo.image(Path("public/QR_CODE.svg"))
-    # como installar
+    # como instalar
     # donde está el github
     # should we do threads too?
     return
@@ -21,7 +21,7 @@ def import_02():
     import time # sleep, contar segundos, etc
     from pathlib import Path # operaciónes para archivos
 
-    import viztracer # calcular disempeño de funciones
+    import viztracer # calcular desempeño de funciones
     import marimo as mo # funciones para este cuaderno
     import plotly.graph_objects as go # gráficos
 
@@ -36,14 +36,14 @@ def intro_03(Path, mo):
 
     mo.vstack(
         [
-            mo.Html('<center style="font-size: 3em">el Asincronismo y la Concurrencia de Python en 2025</center>'),
+            mo.Html('<center style="font-size: 3em">El asincronismo y la concurrencia de Python en 2025</center>'),
             mo.hstack(
                 [
                     mo.vstack(
                         [
                             mo.md("## Andrew Pikul"),
                             mo.image(Path("public/andrew.png"), rounded=True, width="25em"),
-                            mo.md("author of: plotly/choreographer, plotly/kaleido, plotly/pozo, plotly/github-helper"),
+                            mo.md("**Author of**: plotly/choreographer, plotly/kaleido, plotly/pozo, plotly/github-helper"),
                             mo.md("[linkedin](https://www.linkedin.com/in/ajpikul/)"),
                             mo.md("[github](https://github.com/ayjayt)"),
                         ], align="center"
@@ -52,7 +52,7 @@ def intro_03(Path, mo):
                         [
                             mo.md("## David Angarita Ruiz"),
                             mo.image(Path("public/david.png"), rounded=True, width="25em"),
-                            mo.md("author of: choreographer, kaleido, pozo, github-helper"),
+                            mo.md("**Author of**: choreographer, kaleido, pozo, github-helper"),
                             mo.md("[linkedin](https://www.linkedin.com/in/davidangaritaruiz/)"),
                             mo.md("[github](https://github.com/davidangarita1)"),
                         ], align="center"
@@ -544,7 +544,7 @@ def sync_perf_08(Path, gato, go, icicle, math, viztracer, yo):
 def gato_async_09(asyncio):
     # DEFINICIÓN
 
-    async def siesta_async(): # estas son corutinas
+    async def siesta_async(): # estas son corrutinas
         await asyncio.sleep(1)
 
     async def gato_async(p=True):
@@ -557,8 +557,6 @@ def gato_async_09(asyncio):
         await siesta_async()
         if p:
             print("buen día")
-
-    # cuales son las reglas de corutinas
     return gato_async, yo_async
 
 
@@ -566,7 +564,7 @@ def gato_async_09(asyncio):
 async def gato_dur_10(gato_async, time, yo_async):
     # CONTAR
 
-    _inicio = time.perf_counter() # marcar hora
+    _inicio = time.perf_counter() # hora inicio
 
     await gato_async()
     await yo_async()
@@ -630,7 +628,7 @@ async def gato_perf_11(
 @app.cell
 async def gather_gato_12(asyncio, gato_async, time, yo_async):
 
-    _inicio = time.perf_counter() # marcar hora
+    _inicio = time.perf_counter() # hora inicio
 
     resultados = await asyncio.gather(
         gato_async(),
@@ -646,7 +644,7 @@ def sync_async_13(mo):
     mo.hstack(
         [
             mo.md(r"""
-    # Sincrona
+    # Síncrono
     ```python
     def siesta():
         time.sleep(1)
@@ -662,7 +660,7 @@ def sync_async_13(mo):
     ```
     """),
             mo.md(r"""
-    # Asincrona
+    # Asíncrono
     ```python
     async def siesta_async():
         await asyncio.sleep(1)
@@ -681,7 +679,7 @@ def sync_async_13(mo):
         gap=1
     )
 
-    # acá hagamos comparison de flamegraph real
+    # acá hacemos comparación del flamegraph real
     return
 
 
@@ -726,8 +724,7 @@ def dag_15(dag, mo):
                 gap=3,
             ),
             mo.md(
-    """> ¿Y de dónde vienen los errores? Normalmente desde bajo. Pero con async/await, no. Vienen de odos lados.
-    También no vemos toda la misma información."""
+    """> ¿Y de dónde vienen los errores? Normalmente desde abajo. Pero con async/await, no. Vienen de todos lados. También, no vemos toda la misma información."""
             ),
         ],
         align="center",
@@ -762,8 +759,7 @@ def try_16(mo):
                 gap=3,
             ),
             mo.md(
-                """> Pero normalmente tenemos que medir, proporcionar, el riesgo de error.
-    > Y si es riesgo, hacemos envoltura de try/await. Pero que peligro hay en un gato dormido?"""
+                """> Pero normalmente tenemos que medir, proporcionar el riesgo de error. Y si es riesgo, hacemos envoltura de try/await. ¿Pero qué peligro hay en un gato dormido?"""
             ),
         ],
         align="center",
@@ -797,9 +793,7 @@ def timeout_17(dag, mo, tree1):
                 gap=3,
             ),
             mo.md(
-                """> Si nosotros creamos un API, usuarios pueden cancelar nuestras tareas sin permiso.
-                ¿Qué hacemos con los errores? ¿Cancelar? ¿Capturar para crear uno solo?
-                En este caso, se cancela todo."""
+                """> Si nosotros creamos un API, los usuarios pueden cancelar nuestras tareas sin permiso. ¿Qué hacemos con los errores? ¿Cancelar? ¿Capturarlos para crear uno solo? En este caso, se cancela todo."""
             ),
         ],
         align="center",
@@ -809,7 +803,7 @@ def timeout_17(dag, mo, tree1):
 
 @app.function
 async def co_mal_impar(i):
-    if i in (0, 2, 4, 6, 8, 10): #  por evitar un modulo
+    if i in (0, 2, 4, 6, 8, 10):
         return i
     raise ValueError(f"Error: {str(i)} es impar")
 
@@ -819,7 +813,7 @@ async def ret_exc_19(asyncio, pprint):
     _t = [co_mal_impar(i) for i in range(10)]
     _r = await asyncio.gather(*_t, return_exceptions=True)
 
-    # Todo va a seguir está el fin, no hay cancelar. El contrario de ariba.
+    # Todo va a seguir hasta el fin, no hay cancelación. Es lo contrario de arriba.
 
     print("")
     print("Resultado:")
@@ -864,7 +858,7 @@ async def a_mano_21(asyncio):
         except Exception as e:
             for t in _t:
                 t.cancel()
-                # también se pudo cancelar el grupo para el mismo efecto
+                # También se pudo cancelar el grupo para lograr el mismo efecto.
             # raise e
             print(e)
         else:
@@ -877,7 +871,7 @@ async def a_mano_21(asyncio):
 @app.cell
 async def tg_22(asyncio):
     try:
-        async with asyncio.TaskGroup() as _tg: # Python 3.11 # bueno para envolver
+        async with asyncio.TaskGroup() as _tg: # Python 3.11 # es bueno para envolver
             _s = _tg.create_task(asyncio.sleep(1))
             _g = asyncio.create_task(asyncio.sleep(10))
             _tg.create_task(co_mal_impar(1))
@@ -897,7 +891,7 @@ async def e_group_23(asyncio):
             _tg.create_task(co_mal_impar(1))
             _tg.create_task(co_mal_impar(3))
     except* ValueError as e:
-        print("Errores esperados adentro del grupo.")
+        print("Errores esperados dentro del grupo.")
     finally:
         print(f"Sleep cancelado: {_s.cancelled()}")
     return
@@ -907,7 +901,7 @@ async def e_group_23(asyncio):
 def thread_24():
     # con no-GIL
     import sys; print(sys._is_gil_enabled()) # PEP 703
-    # no toda funciona (no hagan conversiones)
+    # no todo funciona (no hagas conversiones)
 
 
     from threading import Thread
@@ -934,7 +928,7 @@ def thread_24():
 
 @app.cell
 def thread_25(Thread):
-    # con no-GIL, tienes que ser todo a mano.
+    # con no-GIL, tienes que hacer todo a mano.
     from threading import Lock
 
     # shared state
@@ -961,9 +955,9 @@ def thread_25(Thread):
 
 @app.cell
 def _():
-    # qué hacemos con errores?
-    # con cancelation?
-    # concurrent.futures.ThreadPoolExecutor <-- mejor en error
+    # qué hacemos con los errores?
+    # con cancelación?
+    # concurrent.futures.ThreadPoolExecutor <-- mejor en el error
     # Queues
     return
 
