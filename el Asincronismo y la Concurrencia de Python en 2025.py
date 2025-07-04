@@ -70,17 +70,6 @@ def intro_03(Path, mo):
     return
 
 
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    ![](public/andrew.png)
-    ![](public/david.png)
-    """
-    )
-    return
-
-
 @app.cell(hide_code=True)
 def version_04(mo):
     mo.Html("""<svg xmlns="http://www.w3.org/2000/svg" class="release-cycle-chart" viewBox="0 0 828 378.0">
