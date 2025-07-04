@@ -1,15 +1,12 @@
 import marimo
 
 __generated_with = "0.14.10"
-app = marimo.App(
-    width="medium",
-    layout_file="layouts/el Asincronismo y la Concurrencia de Python en 2025.slides.json",
-)
+app = marimo.App(width="medium")
 
 
 @app.cell
-def sala_01():
-    # hacer un QR
+def sala_01(Path, mo):
+    mo.image(Path("public/QR_CODE.svg"))
     # como installar
     # donde está el github
     # should we do threads too?
