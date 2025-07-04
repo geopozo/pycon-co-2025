@@ -835,19 +835,17 @@ async def ret_exc_19(asyncio, pprint):
 def rest_tree_20(Path, dag, mo):
     _node = dag.Node("gather", "1")
 
-    tree3 = {"iniciar": [{"REST":_node} for i in range(5)]}
+    tree3 = {"iniciar": [{"REST": _node} for i in range(5)]}
     errors3 = []
 
     mo.vstack(
-        [   mo.md("[geopozo/github-helper](https://www.github.com/geopozo/github-helper)"),
-            mo.hstack(
-                [
-                    mo.Html(dag.from_function_tree(tree3,errors3)),
-                    mo.image(Path("public/gh_helper_screenshot.png"),),
-                ],
-                justify="start",
-                align="center",
-                gap=3,
+        [
+            mo.md(
+                "[geopozo/github-helper](https://www.github.com/geopozo/github-helper)"
+            ),
+            mo.Html(dag.from_function_tree(tree3, errors3)),
+            mo.image(
+                Path("public/gh_helper_screenshot.png"),
             ),
             mo.md(
                 """> Código abierto. Mucho llamadas de rest.
