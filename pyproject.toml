@@ -29,11 +29,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "poethepoet>=0.31.1",
-    "pytest-xdist",
-    "pytest>=8.3.4",
-    "mypy>=1.14.1",
-    "ipdb>=0.13.13",
 ]
 
 [tool.ruff.lint]
