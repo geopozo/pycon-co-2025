@@ -483,7 +483,7 @@ def sync_code(time):
 @app.cell
 def _(gato, time, yo):
     # CONTAR
-    _inicio = time.perf_counter() # marcar hora
+    _inicio = time.perf_counter() # hora inicio
 
     gato() # mi gato
     yo() # yo
@@ -738,7 +738,7 @@ def _(mo):
             gato_async(),
             yo_async(),
         )
-    except:
+    except RuntimeError:
         ... # haz algo con los errores
     else:
         ... # si no hay errores! también parte de la familia
@@ -799,106 +799,58 @@ def _(dag, mo, tree1):
 @app.cell
 async def _(asyncio, pprint):
     async def error(i):
-        if not i % 2: # "si es par"
+        if i in (0, 2, 4, 6, 8, 10): #  por evitar un modulo
             await asyncio.sleep(i/10)
-            print(f"Devolviendo {i!s}")
+            print(f"Devolviendo {str(i)}") # !s
             return i
-        raise ValueError(f"Error: {i!s}")
+        raise ValueError(f"Error: {str(i)} es impar")
 
     _t = [error(i) for i in range(10)]
     _r = await asyncio.gather(*_t, return_exceptions=True)
 
+    print("")
+    print("Resultado:")
     pprint.pp(_r)
     return (error,)
 
 
 @app.cell
-async def _(asyncio, e, error):
-    try:
-        _t = [error(i) for i in range(10)]
-        _r = await asyncio.gather(*_t)
-    except ValueError as e:
-        print(e)
-
-    print("")
-
-    for i, t in enumerate(_t):
-        try:
-            print(f"corutina {i}: {await t}")
-        except RuntimeError as e:
-            print(f"corutina {i} ya esperada?: {e}")
-        except ValueError:
-            print(f"corutina {i} acaba de da el error esperado: {e}")
-
-    print("")
-    print("")
-    print("")
-
-    for i, t in enumerate(_t):
-        t = asyncio.create_task(t)
-        try:
-            print(f"corutina {i}: {await t}")
-        except RuntimeError as e:
-            print(f"corutina {i} ya esperada?: {e}")
-        except ValueError:
-            print(f"corutina {i} acaba de da el error esperado: {e}")
-    return
-
-
-@app.cell
-async def _(asyncio, gato_async, pprint, yo_async):
-    _t1 = gato_async()
-    _t2 = yo_async()
-    try:
-        async with asyncio.timeout(.7):
-            await asyncio.gather(
-                _t1,
-                _t2,
-            )
-    finally:
-        pprint.pp(await asyncio.gather(_t1, _t2, return_exceptions=True))
-
-    return
-
-
-@app.cell
-async def _(asyncio, gato_async, yo_async):
+async def _(asyncio, error, gato_async, yo_async):
     async def gato_y_yo_gather():
         try:
             _t1 = asyncio.create_task(gato_async())
             _t2 = asyncio.create_task(yo_async())
-        
-            resultados = await asyncio.gather(_t1, _t2)
-        except (asyncio.CancelledError) as e:
+            _t3 = asyncio.create_task(error(20))
+            resultados = await asyncio.gather(_t1, _t2, _t3)
+        except Exception as e:
+            _t1.done()
             _t1.cancel() # también puedes cancelar gather directo si quieres
+            _t2.done()
             _t2.cancel()
-            await asyncio.gather(_t1, _t2, return_exceptions=True)
-            raise TimeoutError("Timeout, el resto cancelado.") from e
-        
+            _t3.done()
+            _t3.cancel()
+            raise e
         return resultados
 
-    async with asyncio.timeout(.2):
-        await gato_y_yo_gather()
+    await gato_y_yo_gather()
     return
 
 
-app._unparsable_cell(
-    r"""
+@app.cell
+def _(asyncio, gato_async, yo_async):
     async def gato_y_yo_gather_collect():
         resultados = await asyncio.gather(
             gato_async(),
             yo_async(),
             return_exceptions=True
-        ))
+        )
         # nada cancela, todo hasta el fin
 
         errores = ExceptionGroup([t for t in resultados if isinstance(t, Exception)])
         if errores:
             raise errores
         return resultados
-    """,
-    name="_"
-)
+    return
 
 
 @app.cell
@@ -931,6 +883,20 @@ def _(mo):
 
 @app.cell
 def _():
+    return
+
+
+@app.cell
+def _(asyncio):
+    t = asyncio.create_task(asyncio.sleep(3))
+
+    t.done()
+    t.cancelled()
+    t.exception()
+    t.result()
+
+    t.cancel()
+
     return
 
 
