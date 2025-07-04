@@ -461,9 +461,8 @@ def version_04(mo):
 
 
 @app.cell
-def cuatro_jinetes_05():
-    # Info graphic table
-    # fix SVG above w/ link
+def cuatro_jinetes_05(Path, mo):
+    mo.image(Path("public/cuatro_gatos.svg"))
     return
 
 
