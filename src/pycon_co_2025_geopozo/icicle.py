@@ -1,27 +1,36 @@
 """Helps convert viztracer jsons to a flamegraph."""
 import json
+import subprocess
 from pathlib import Path
 from typing import Literal
-
-import jq  # pip install jq
 
 BranchValuesOptions = Literal["total", "remainder"]
 
 def sort_and_strip_json(path: Path | str):
-    with Path(path).open() as f:
-        data = json.load(f)
-
-    jq_filter = """
-      .traceEvents | [.[]
-       | select(.ph == "X" and .cat == "FEE")
-       | {tid, ts, dur, name}]
-      | sort_by(.tid)
-      | group_by(.tid)
-      | map({ (.[0].tid | tostring): (sort_by(.ts)) })
-      | add
-    """
-
-    return jq.compile(jq_filter).input(data).first()
+    try:
+        path = str(path)
+        jq_filter = (
+            '.traceEvents'
+            ' | [ .[]'
+            '     | select(.ph == "X" and .cat == "FEE")'
+            '     | {tid, ts, dur, name}'
+            '   ]'
+            ' | sort_by(.tid)'
+            ' | group_by(.tid)'
+            ' | map({ (.[0].tid|tostring): (sort_by(.ts)) })'
+            ' | add'
+        )
+        # run jq, capture its stdout
+        proc = subprocess.run(
+            ["jq", jq_filter, path],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        # parse the JSON output back into Python
+        return json.loads(proc.stdout)
+    except Exception as e:
+        raise RuntimeError("This requires jq to be installed.") from e
 
 def from_threads(thread_events_dict):
     """
