@@ -4,7 +4,7 @@ __generated_with = "0.14.10"
 app = marimo.App(width="medium")
 
 
-@app.cell
+@app.cell(hide_code=True)
 def sala_01(Path, mo):
     mo.vstack([
         mo.image(Path("public/QR_CODE.svg"), "QR Pycon 2025 Geopozo package", 200, 200),
@@ -36,7 +36,7 @@ def import_02():
     return Path, asyncio, dag, go, icicle, math, mo, pprint, time, viztracer
 
 
-@app.cell
+@app.cell(hide_code=True)
 def intro_03(Path, mo):
     # Andrew Pikul
 
