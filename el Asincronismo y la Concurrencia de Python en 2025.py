@@ -33,30 +33,49 @@ def import_02():
     return Path, asyncio, dag, go, icicle, math, mo, pprint, time, viztracer
 
 
-@app.cell(hide_code=True)
-def intro_03(mo):
+@app.cell
+def intro_03(Path, mo):
+    # Andrew Pikul
+
+    mo.vstack(
+        [
+            mo.Html('<center style="font-size: 3em">el Asincronismo y la Concurrencia de Python en 2025</center>'),
+            mo.hstack(
+                [
+                    mo.vstack(
+                        [
+                            mo.md("## Andrew Pikul"),
+                            mo.image(Path("public/andrew.png"), rounded=True, width="25em"),
+                            # author of: plotly/choreographer, plotly/kaleido, plotly/pozo, plotly/github-helper
+                            # linkedin
+                            # github
+                        ], align="center"
+                    ),
+                    mo.vstack(
+                        [
+                            mo.md("## David Angarita Ruiz"),
+                            mo.image(Path("public/david.png"), rounded=True, width="25em"),
+                            # author of: choreographer, kaleido, pozo, github-helper
+                            # linkedin
+                            # github
+                        ], align="center"
+                    )
+                ],
+                justify="space-around",
+                align="start",
+            ),
+        ],
+        # The geopozo team www.geopozo.ing
+    )
+    return
+
+
+@app.cell
+def _(mo):
     mo.md(
         r"""
-    # Título, Presentarse a los Authores
-
-    Geopozo
-
-    ## David:
-
-    linkedin
-    Coautor de github-helper y geopozo
-
-    ## Andrew
-
-    linkedin
-    Coautor de choreographer, kaleido
-    Coautor de github-helper y geopozo
-
-    ## Información
-    - Repositorio (github)
-    - Paquete (pypi)
-
-    - geopozo.github.io/loquesea (RO, proabably cambiamos nombre)
+    ![](public/andrew.png)
+    ![](public/david.png)
     """
     )
     return
