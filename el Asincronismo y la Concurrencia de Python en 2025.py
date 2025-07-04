@@ -8,7 +8,7 @@ app = marimo.App(
 
 
 @app.cell
-def _():
+def sala_01():
     # hacer un QR
     # como installar
     # donde está el github
@@ -17,7 +17,7 @@ def _():
 
 
 @app.cell
-def _():
+def import_02():
     import asyncio # herramientas para asyncio
     import json # cargar y imprimir json
     import math
@@ -36,7 +36,7 @@ def _():
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def intro_03(mo):
     mo.md(
         r"""
     # Título, Presentarse a los Authores
@@ -65,7 +65,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def version_04(mo):
     mo.Html("""<svg xmlns="http://www.w3.org/2000/svg" class="release-cycle-chart" viewBox="0 0 828 378.0">
         <defs>
             <linearGradient id="release-cycle-mask-gradient-active">
@@ -455,14 +455,14 @@ def _(mo):
 
 
 @app.cell
-def _():
+def cuatro_jinetes_05():
     # Info graphic table
     # fix SVG above w/ link
     return
 
 
 @app.cell
-def sync_code(time):
+def gato_sync_06(time):
     # DEFINICIÓN
     def siesta():
         time.sleep(1)
@@ -481,7 +481,7 @@ def sync_code(time):
 
 
 @app.cell
-def _(gato, time, yo):
+def sync_dur_07(gato, time, yo):
     # CONTAR
     _inicio = time.perf_counter() # hora inicio
 
@@ -493,7 +493,7 @@ def _(gato, time, yo):
 
 
 @app.cell
-def _(Path, gato, go, icicle, math, viztracer, yo):
+def sync_perf_08(Path, gato, go, icicle, math, viztracer, yo):
     # CALCULAR FLAMEGRAPH
 
     with (
@@ -539,7 +539,7 @@ def _(Path, gato, go, icicle, math, viztracer, yo):
 
 
 @app.cell
-def _(asyncio):
+def gato_async_09(asyncio):
     # DEFINICIÓN
 
     async def siesta_async(): # estas son corutinas
@@ -561,7 +561,7 @@ def _(asyncio):
 
 
 @app.cell
-async def _(gato_async, time, yo_async):
+async def gato_dur_10(gato_async, time, yo_async):
     # CONTAR
 
     _inicio = time.perf_counter() # marcar hora
@@ -574,7 +574,15 @@ async def _(gato_async, time, yo_async):
 
 
 @app.cell
-async def _(Path, gato_async, go, icicle, math, viztracer, yo_async):
+async def gato_perf_11(
+    Path,
+    gato_async,
+    go,
+    icicle,
+    math,
+    viztracer,
+    yo_async,
+):
     # MIRAR FLAMEGRAPH
 
     with (
@@ -618,7 +626,7 @@ async def _(Path, gato_async, go, icicle, math, viztracer, yo_async):
 
 
 @app.cell
-async def _(asyncio, gato_async, time, yo_async):
+async def gather_gato_12(asyncio, gato_async, time, yo_async):
 
     _inicio = time.perf_counter() # marcar hora
 
@@ -632,7 +640,7 @@ async def _(asyncio, gato_async, time, yo_async):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def sync_async_13(mo):
     mo.hstack(
         [
             mo.md(r"""
@@ -676,14 +684,14 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(Path, mo):
+def cheatsheet_14(Path, mo):
     mo.image(Path("public/mug_screenshot.png"))
     return
 
 
 @app.cell(hide_code=True)
-def _(dag, mo):
-    tree1 = {dag.Node("gather", "0"): {dag.Node("gato", "1"): ["siesta", "siesta"], "yo": [dag.Node("siesta","2")]}}
+def dag_15(dag, mo):
+    tree1 = {dag.Node("gather", "0"): {dag.Node("gato", "1"): ["siesta", "siesta"], "yo": dag.Node("siesta","2")}}
     errors1 = [("1", "0", {})]
     mo.vstack(
         [
@@ -726,7 +734,7 @@ def _(dag, mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def try_16(mo):
     mo.vstack(
         [
             mo.hstack(
@@ -762,7 +770,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(dag, mo, tree1):
+def timeout_17(dag, mo, tree1):
     tree2 = {dag.Node("timeout", "-1"): tree1}
     errors2 = [
         ("-1", "1", {}),
@@ -788,7 +796,57 @@ def _(dag, mo, tree1):
             ),
             mo.md(
                 """> Si nosotros creamos un API, usuarios pueden cancelar nuestras tareas sin permiso.  
-                ¿Qué hacemos con los errores? ¿Cancelar? ¿Capturar para crear uno solo?"""
+                ¿Qué hacemos con los errores? ¿Cancelar? ¿Capturar para crear uno solo?  
+                En este caso, se cancela todo."""
+            ),
+        ],
+        align="center",
+    )
+    return
+
+
+@app.function
+async def co_mal_impar(i):
+    if i in (0, 2, 4, 6, 8, 10): #  por evitar un modulo
+        return i
+    raise ValueError(f"Error: {str(i)} es impar")
+
+
+@app.cell
+async def ret_exc_19(asyncio, pprint):
+    _t = [co_mal_impar(i) for i in range(10)]
+    _r = await asyncio.gather(*_t, return_exceptions=True)
+
+    # Todo va a seguir está el fin, no hay cancelar. El contrario de ariba.
+
+    print("")
+    print("Resultado:")
+    print("")
+    pprint.pp(_r)
+    return
+
+
+@app.cell
+def _(Path, dag, mo):
+    _node = dag.Node("gather", "1")
+
+    tree3 = {"iniciar": [{"REST":_node} for i in range(5)]}
+    errors3 = []
+
+    mo.vstack(
+        [
+            mo.hstack(
+                [
+                    mo.Html(dag.from_function_tree(tree3,errors3)),
+                    mo.image(Path("public/gh_helper_screenshot.png")),
+                ],
+                justify="start",
+                align="center",
+                gap=3,
+            ),
+            mo.md(
+                """> Código abierto. Mucho llamadas de rest. Paralelo por utilizar otros servidores. Microservicios.  
+                Hemos visto cancelar nada"""
             ),
         ],
         align="center",
@@ -797,106 +855,33 @@ def _(dag, mo, tree1):
 
 
 @app.cell
-async def _(asyncio, pprint):
-    async def error(i):
-        if i in (0, 2, 4, 6, 8, 10): #  por evitar un modulo
-            await asyncio.sleep(i/10)
-            print(f"Devolviendo {str(i)}") # !s
-            return i
-        raise ValueError(f"Error: {str(i)} es impar")
-
-    _t = [error(i) for i in range(10)]
-    _r = await asyncio.gather(*_t, return_exceptions=True)
-
-    print("")
-    print("Resultado:")
-    pprint.pp(_r)
-    return (error,)
-
-
-@app.cell
-async def _(asyncio, error, gato_async, yo_async):
+async def _(asyncio):
     async def gato_y_yo_gather():
         try:
-            _t1 = asyncio.create_task(gato_async())
-            _t2 = asyncio.create_task(yo_async())
-            _t3 = asyncio.create_task(error(20))
-            resultados = await asyncio.gather(_t1, _t2, _t3)
+            _t = [asyncio.create_task(co_mal_impar(i)) for i in range(3)]
+            resultados = await asyncio.gather(*_t) # solo con tareas!
         except Exception as e:
-            _t1.done()
-            _t1.cancel() # también puedes cancelar gather directo si quieres
-            _t2.done()
-            _t2.cancel()
-            _t3.done()
-            _t3.cancel()
-            raise e
-        return resultados
+            for t in _t:
+                t.cancel()
+                # también se pudo cancelar el grupo para el mismo efecto
+            # raise e
+            print(e)
+        else:
+            return resultados
 
     await gato_y_yo_gather()
     return
 
 
 @app.cell
-def _(asyncio, gato_async, yo_async):
-    async def gato_y_yo_gather_collect():
-        resultados = await asyncio.gather(
-            gato_async(),
-            yo_async(),
-            return_exceptions=True
-        )
-        # nada cancela, todo hasta el fin
-
-        errores = ExceptionGroup([t for t in resultados if isinstance(t, Exception)])
-        if errores:
-            raise errores
-        return resultados
-    return
-
-
-@app.cell
-def _(mo):
-    mo.md(
-        r"""
-    # Arregular scripts/
-
-    Hacer threads GIL/no-GIL
-
-    # TaskGroup
-
-    - Como se hace un gather()?
-    - Si se sale del contexto, se cancelan los errores?
-    - Podemos usar callbacks para sobreescribir comportamiento?
-      -  Intenta dos veces
-      -  Leventar Error Nuevo
-    - Grupos de errores
-    - Cancelación automatica (context sin context)
-
-    Quieres seguir? O quieres parar. Qué hacemos. Y qué hacemos cuando nos
-    cancelamos.
-
-    Gil
-    ## queue
-    """
-    )
+def _():
+    # debe ser task group
     return
 
 
 @app.cell
 def _():
-    return
-
-
-@app.cell
-def _(asyncio):
-    t = asyncio.create_task(asyncio.sleep(3))
-
-    t.done()
-    t.cancelled()
-    t.exception()
-    t.result()
-
-    t.cancel()
-
+    # gil
     return
 
 
