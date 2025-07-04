@@ -14,8 +14,8 @@ class Node(NamedTuple):
 
 Tree: TypeAlias = ( # noqa: UP040 mypy disagrees
     str
-        | list[str | Node] # no lists of trees means no anonymous nodes
-        | tuple[str | Node, ...]
+        | list["Tree"] # We need better traversal.
+        | tuple["Tree", ...]
         | dict[str, "Tree"]
         | Node
 )
@@ -42,31 +42,29 @@ def _dict_to_edges_and_labels( # noqa: C901
     def walk(subtree: Tree, parent_id: str | None=None) -> None: # noqa: C901
         # If we're at the top-level dict, seed the roots
         if parent_id is None:
-            if isinstance(subtree, (str | Node)):
-                root_id = make_id(subtree)
+            if isinstance(subtree, (str , Node)):
+                make_id(subtree) # Correct
             elif isinstance(subtree, dict):
                 for root_label, child in subtree.items():
                     root_id = make_id(root_label)
                     walk(child, root_id)
             elif isinstance(subtree, (list, tuple)):
                 for root_label in subtree:
-                    root_id = make_id(root_label)
+                    walk(root_label)
             return
 
         # Otherwise, traverse children
-        if isinstance(subtree, dict):
+        if isinstance(subtree, (str, Node)):
+            leaf_id = make_id(subtree)
+            edges.append((parent_id, leaf_id))
+        elif isinstance(subtree, dict):
             for child_label, child_sub in subtree.items():
                 child_id = make_id(child_label)
                 edges.append((parent_id, child_id))
                 walk(child_sub, child_id)
         elif isinstance(subtree, (list, tuple)):
             for child_label in subtree:
-                child_id = make_id(child_label)
-                edges.append((parent_id, child_id))
-        else:
-            # leaf that's not list/dict
-            leaf_id = make_id(str(subtree))
-            edges.append((parent_id, leaf_id))
+                walk(child_label, parent_id)
 
     walk(tree)
     return edges, labels
@@ -76,6 +74,8 @@ def _render_dag(tree: Node,
                 ) -> str:
     """Render html string of svg."""
     edges, labels = _dict_to_edges_and_labels(tree)
+    print(edges)
+    print(labels)
     dot = Digraph(format="svg")
     dot.graph_attr["bgcolor"] = "transparent"
     dot.graph_attr["rankdir"] = "LR"
