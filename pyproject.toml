@@ -56,6 +56,7 @@ ignore = [
           "PT003", # scope="function" implied but I like readability
           "G004", # I like fstrings in my log
           "T201", # Allow print
+          "PLR1711", # marimo
           ]
 
 [tool.ruff.lint.per-file-ignores]

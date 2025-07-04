@@ -19,10 +19,8 @@ def sala_01():
 @app.cell
 def import_02():
     import asyncio # herramientas para asyncio
-    import json # cargar y imprimir json
     import math
     import pprint
-    import random # números alreatorios
     import time # sleep, contar segundos, etc
     from pathlib import Path # operaciónes para archivos
 
@@ -724,7 +722,7 @@ def dag_15(dag, mo):
                 gap=3,
             ),
             mo.md(
-    """> ¿Y de dónde vienen los errores? Normalmente desde bajo. Pero con async/await, no. Vienen de odos lados.  
+    """> ¿Y de dónde vienen los errores? Normalmente desde bajo. Pero con async/await, no. Vienen de odos lados.
     También no vemos toda la misma información."""
             ),
         ],
@@ -795,8 +793,8 @@ def timeout_17(dag, mo, tree1):
                 gap=3,
             ),
             mo.md(
-                """> Si nosotros creamos un API, usuarios pueden cancelar nuestras tareas sin permiso.  
-                ¿Qué hacemos con los errores? ¿Cancelar? ¿Capturar para crear uno solo?  
+                """> Si nosotros creamos un API, usuarios pueden cancelar nuestras tareas sin permiso.
+                ¿Qué hacemos con los errores? ¿Cancelar? ¿Capturar para crear uno solo?
                 En este caso, se cancela todo."""
             ),
         ],
@@ -845,8 +843,9 @@ def _(Path, dag, mo):
                 gap=3,
             ),
             mo.md(
-                """> Código abierto. Mucho llamadas de rest. Paralelo por utilizar otros servidores. Microservicios.  
-                Hemos visto cancelar nada"""
+                """> Código abierto. Mucho llamadas de rest.
+                Paralelo por utilizar otros servidores. Microservicios.
+                Hemos visto cancelar nada y cancelar todo. 'Y hay más?"""
             ),
         ],
         align="center",
