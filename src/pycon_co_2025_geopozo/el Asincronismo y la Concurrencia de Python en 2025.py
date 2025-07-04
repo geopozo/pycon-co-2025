@@ -5,14 +5,9 @@ app = marimo.App(width="medium")
 
 
 @app.cell
-def sala_01(Path, mo):
-    mo.image(Path("public/QR_CODE.svg"))
-    return
-
-
-@app.cell
-def _(mo):
+def _(Path, mo):
     mo.vstack([
+        mo.image(Path("public/QR_CODE.svg"), "QR Pycon 2025 Geopozo package", 200, 200),
         mo.md("## Como instalar:"),
         mo.md("`uv add pycon-co-2025-geopozo`") 
     ])
