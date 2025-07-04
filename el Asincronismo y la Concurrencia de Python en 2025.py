@@ -843,8 +843,8 @@ async def ret_exc_19(asyncio, pprint):
     return
 
 
-@app.cell
-def _(Path, dag, mo):
+@app.cell(hide_code=True)
+def rest_tree_20(Path, dag, mo):
     _node = dag.Node("gather", "1")
 
     tree3 = {"iniciar": [{"REST":_node} for i in range(5)]}
@@ -873,7 +873,7 @@ def _(Path, dag, mo):
 
 
 @app.cell
-async def _(asyncio):
+async def a_mano_21(asyncio):
     async def gato_y_yo_gather():
         try:
             _t = [asyncio.create_task(co_mal_impar(i)) for i in range(3)]
@@ -892,14 +892,96 @@ async def _(asyncio):
 
 
 @app.cell
-def _():
-    # debe ser task group
+async def tg_22(asyncio):
+    try:
+        async with asyncio.TaskGroup() as _tg: # Python 3.11 # bueno para envolver
+            _s = _tg.create_task(asyncio.sleep(1))
+            _g = asyncio.create_task(asyncio.sleep(10))
+            _tg.create_task(co_mal_impar(1))
+            _tg.create_task(co_mal_impar(3))
+
+    finally:
+        print(f"Sleep cancelado: {_s.cancelled()}")
+        print(f"Sleep global cancelado: {_g.cancelled()}")
+    return
+
+
+@app.cell
+async def e_group_23(asyncio):
+    try:
+        async with asyncio.TaskGroup() as _tg:
+            _s = _tg.create_task(asyncio.sleep(1))
+            _tg.create_task(co_mal_impar(1))
+            _tg.create_task(co_mal_impar(3))
+    except* ValueError as e:
+        print("Errores esperados adentro del grupo.")
+    finally:
+        print(f"Sleep cancelado: {_s.cancelled()}")
+    return
+
+
+@app.cell
+def thread_24():
+    # con no-GIL
+    import sys; print(sys._is_gil_enabled()) # PEP 703
+    # no toda funciona (no hagan conversiones)
+
+
+    from threading import Thread
+
+    # shared state
+    counter = 0
+
+    def hilo():
+        global counter
+        for _ in range(10_000_000):
+            counter += 1
+
+    if __name__ == "__main__":
+        _t1 = Thread(target = hilo)
+        _t2 = Thread(target = hilo)
+        _t1.start()
+        _t2.start()
+        _t1.join()
+        _t2.join()
+
+        print(counter)  # → Final counter value: 2000
+    return (Thread,)
+
+
+@app.cell
+def thread_25(Thread):
+    # con no-GIL, tienes que ser todo a mano.
+    from threading import Lock
+
+    # shared state
+    counter_locked = 0
+    lock = Lock()
+
+    def hilo_locked():
+        global counter_locked
+        for _ in range(10_000_000):
+            with lock:
+                counter_locked += 1
+
+
+    _t1 = Thread(target = hilo_locked)
+    _t2 = Thread(target = hilo_locked)
+    _t1.start()
+    _t2.start()
+    _t1.join()
+    _t2.join()
+
+    print(counter_locked)  # → Final counter value: 2000
     return
 
 
 @app.cell
 def _():
-    # gil
+    # qué hacemos con errores?
+    # con cancelation?
+    # concurrent.futures.ThreadPoolExecutor <-- mejor en error
+    # Queues
     return
 
 
