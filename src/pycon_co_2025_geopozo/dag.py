@@ -74,8 +74,6 @@ def _render_dag(tree: Node,
                 ) -> str:
     """Render html string of svg."""
     edges, labels = _dict_to_edges_and_labels(tree)
-    print(edges)
-    print(labels)
     dot = Digraph(format="svg")
     dot.graph_attr["bgcolor"] = "transparent"
     dot.graph_attr["rankdir"] = "LR"
