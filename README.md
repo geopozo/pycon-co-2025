@@ -1,7 +1,13 @@
-`PYTHON_GIL=0 uv run marimo edit`
 
-## python freethreaded
-Nota: Si eres usuario de Windows no puedes usar Python con freethreaded de forma automática, debes instalar otras dependencias necesarias. Puedes correr este comando para revisar qué versiones tienes de Python:
+Este cuaderno de [marimo](https://marimo.io/) está activado para usar la versión
+nueva de python: free-threaded (hilo-libre).
+
+No es necesario, pero para aprovechar las funciones, debes usar una versión
+de python > `3.15t`.
+
+Lastimosamente, está versión no está disponible para Windows.
+
+Puedes verificar las versiones disponibles con:
 
 ```sh
 uv python list
@@ -18,14 +24,14 @@ cpython-3.8.20-windows-x86_64-none                             <download availab
 cpython-3.7.9-windows-x86_64-none                              <download available>
 ```
 
-Encontrarás las versiones de Python marcadas con freethreaded disponibles para usar.
+## Linux
 
-Para instalar la versión deseada puedes usar el siguiente comando:
-```sh
-uv python install 3.14
-```
+`PYTHON_GIL=0 uv run marimo edit`
 
-Si deseas instalar una versión con freethreaded, debes agregar una 't' al final de la versión:
-```sh
-uv python install 3.14t
-```
+## Windows
+
+`uv run --python 3.14 marimo edit`
+
+## Mac
+
+Tienes que mirar a `uv list python`.
