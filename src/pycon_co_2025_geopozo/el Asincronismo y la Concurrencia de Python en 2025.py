@@ -46,18 +46,18 @@ def intro_03(Path, mo):
                         [
                             mo.md("## Andrew Pikul"),
                             mo.image(Path("public/andrew.png"), rounded=True, width="25em"),
-                            # author of: plotly/choreographer, plotly/kaleido, plotly/pozo, plotly/github-helper
-                            # linkedin
-                            # github
+                            mo.md("author of: plotly/choreographer, plotly/kaleido, plotly/pozo, plotly/github-helper"),
+                            mo.md("[linkedin](https://www.linkedin.com/in/ajpikul/)"),
+                            mo.md("[github](https://github.com/ayjayt)"),
                         ], align="center"
                     ),
                     mo.vstack(
                         [
                             mo.md("## David Angarita Ruiz"),
                             mo.image(Path("public/david.png"), rounded=True, width="25em"),
-                            # author of: choreographer, kaleido, pozo, github-helper
-                            # linkedin
-                            # github
+                            mo.md("author of: choreographer, kaleido, pozo, github-helper"),
+                            mo.md("[linkedin](https://www.linkedin.com/in/davidangaritaruiz/)"),
+                            mo.md("[github](https://github.com/davidangarita1)"),
                         ], align="center"
                     )
                 ],
