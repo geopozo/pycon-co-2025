@@ -5,16 +5,21 @@ app = marimo.App(width="medium")
 
 
 @app.cell
-def _(Path, mo):
+def sala_01(Path, mo):
     mo.vstack([
         mo.image(Path("public/QR_CODE.svg"), "QR Pycon 2025 Geopozo package", 200, 200),
         mo.md("## Como instalar:"),
-        mo.md("`uv add pycon-co-2025-geopozo`") 
+        mo.md("""
+    ```
+    uv add pycon-co-2025-geopozo
+    PYTHON_GIL=0 uv run marimo edit # si linux
+    uv run --python 3.14 marimo edit # si windows
+    ```"""), 
     ])
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def import_02():
     import asyncio # herramientas para asyncio
     import math
@@ -956,10 +961,6 @@ def thread_25(Thread):
 
 @app.cell
 def _():
-    # qué hacemos con los errores?
-    # con cancelación?
-    # concurrent.futures.ThreadPoolExecutor <-- mejor en el error
-    # Queues
     return
 
 
