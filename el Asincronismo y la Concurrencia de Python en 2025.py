@@ -461,9 +461,8 @@ def version_04(mo):
 
 
 @app.cell
-def cuatro_jinetes_05():
-    # Info graphic table
-    # fix SVG above w/ link
+def cuatro_jinetes_05(Path, mo):
+    mo.image(Path("public/cuatro_gatos.svg"))
     return
 
 
@@ -840,11 +839,11 @@ def rest_tree_20(Path, dag, mo):
     errors3 = []
 
     mo.vstack(
-        [
+        [   mo.md("[geopozo/github-helper](https://www.github.com/geopozo/github-helper)"),
             mo.hstack(
                 [
                     mo.Html(dag.from_function_tree(tree3,errors3)),
-                    mo.image(Path("public/gh_helper_screenshot.png")),
+                    mo.image(Path("public/gh_helper_screenshot.png"),),
                 ],
                 justify="start",
                 align="center",
